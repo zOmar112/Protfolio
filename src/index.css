@@ -1,0 +1,94 @@
+@import "tailwindcss";
+
+/* Enable class-based dark mode variant for Tailwind CSS v4 */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ── Custom Theme ── */
+@theme {
+  --color-accent: #2563eb;
+  --color-accent-light: #3b82f6;
+  --font-sans: "Inter", sans-serif;
+  --font-arabic: "Cairo", sans-serif;
+}
+
+/* ── Base Styles ── */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    overflow-x: hidden;
+  }
+
+  body {
+    @apply bg-white text-gray-900 font-sans antialiased transition-colors duration-300;
+    overflow-x: hidden;
+  }
+
+  .dark body,
+  body.dark {
+    @apply bg-gray-950 text-gray-100;
+  }
+
+  /* RTL Arabic font */
+  [dir="rtl"] body,
+  [dir="rtl"] * {
+    font-family: "Cairo", sans-serif;
+  }
+}
+
+/* ── Custom Plane Cursor (fine pointer & motion allowed) ── */
+@media (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  html,
+  body {
+    cursor: none;
+  }
+
+  a,
+  button,
+  [role="button"] {
+    cursor: pointer;
+  }
+
+  input,
+  textarea {
+    cursor: text;
+  }
+}
+
+/* ── Aviation Radar Sweep Animation ── */
+@keyframes radar-sweep {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-radar-sweep {
+  animation: radar-sweep 24s linear infinite;
+  transform-origin: center center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-radar-sweep {
+    animation: none !important;
+  }
+  .hover\:-translate-y-1:hover,
+  .hover\:-translate-y-0\.5:hover {
+    transform: none !important;
+  }
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-gray-300 rounded-full;
+}
+.dark ::-webkit-scrollbar-thumb {
+  @apply bg-gray-700;
+}
