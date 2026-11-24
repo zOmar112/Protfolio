@@ -346,7 +346,7 @@ export default function Home() {
 
   return (
     <Section id="home" isHero>
-      <div className="w-full flex flex-col lg:flex-row items-center justify-between gap-10 lg:gap-16 py-8">
+      <div className="w-full flex flex-col lg:flex-row items-center justify-between gap-10 lg:gap-16 py-8 font-cockpit">
         {/* Photo: above text on mobile (order-1), next to text on desktop (lg:order-2) */}
         <div className="order-1 lg:order-2 flex-shrink-0">
           <div className="w-44 h-44 sm:w-56 sm:h-56 md:w-64 md:h-64 lg:w-72 lg:h-72 aspect-square rounded-2xl overflow-hidden border border-accent relative">
@@ -377,7 +377,7 @@ export default function Home() {
         </div>
 
         {/* Text: below photo on mobile (order-2), next to photo on desktop (lg:order-1) */}
-        <div className="order-2 lg:order-1 flex-1 min-w-0 w-full text-center lg:text-start font-cockpit">
+        <div className="order-2 lg:order-1 flex-1 min-w-0 w-full text-center lg:text-start">
           {/* 1. "Hello, I'm" */}
           <p
             aria-label={greetingText}
@@ -438,7 +438,7 @@ export default function Home() {
           {/* 4. USP Paragraph */}
           <p
             aria-label={uspText}
-            className="text-base sm:text-lg md:text-xl text-gray-600 dark:text-gray-400 max-w-2xl leading-relaxed mb-8 grid mx-auto lg:mx-0"
+            className="text-base sm:text-lg md:text-xl font-normal leading-[1.7] text-gray-600 dark:text-gray-400 max-w-2xl mb-8 grid mx-auto lg:mx-0"
           >
             <span className="sr-only">{uspText}</span>
             <span
@@ -458,7 +458,7 @@ export default function Home() {
             initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0 }}
             animate={{ opacity: showCtas ? 1 : 0 }}
             transition={{ duration: shouldReduceMotion ? 0 : 0.4, ease: "easeOut" }}
-            className={`flex flex-wrap items-center justify-center lg:justify-start gap-4 font-sans ${
+            className={`flex flex-wrap items-center justify-center lg:justify-start gap-4 ${
               showCtas ? "pointer-events-auto" : "pointer-events-none"
             }`}
           >

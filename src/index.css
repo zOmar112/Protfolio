@@ -36,11 +36,13 @@
 }
 
 /* ── Cockpit Hero Font & Terminal Cursor ── */
-.font-cockpit {
-  font-family: "B612 Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+.font-cockpit,
+.font-cockpit * {
+  font-family: "B612 Mono", ui-monospace, monospace;
 }
 
-[dir="rtl"] .font-cockpit {
+[dir="rtl"] .font-cockpit,
+[dir="rtl"] .font-cockpit * {
   font-family: "Cairo", sans-serif;
 }
 
