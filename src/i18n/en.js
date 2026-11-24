@@ -530,6 +530,9 @@ const en = {
     copy: "Copy",
     copied: "Copied!",
   },
+  backToTop: {
+    label: "Back to top",
+  },
   backgroundSwitcher: {
     label: "Change background scene",
     title: "Background Scene",

@@ -528,6 +528,9 @@ const ar = {
     copy: "نسخ",
     copied: "تم النسخ!",
   },
+  backToTop: {
+    label: "العودة للأعلى",
+  },
   backgroundSwitcher: {
     label: "تغيير خلفية المشهد",
     title: "خلفية المشهد",
