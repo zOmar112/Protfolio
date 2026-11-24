@@ -17,6 +17,7 @@ const en = {
     greeting: "Hello, I'm",
     name: "Omar Ibrahim",
     role: "Data & Machine Learning Student",
+    roleAlt: "Aviation Computers & Information Student",
     usp: "I help teams and organizations turn raw data into clear predictions through machine learning models I build and test on real datasets.",
     viewWork: "View My Work",
     downloadCv: "Download CV",
