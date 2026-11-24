@@ -12,19 +12,27 @@ const LOOP_USP = false;
 const PLANE_PATH =
   "M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z";
 
-const GREETING_DUR_MS = 600;
-const NAME_DUR_MS = 600;
-const ROLE_LINE_DUR_MS = 620;
-const ROLE_HOLD_MS = 2200;
-const USP_LINE_DUR_MS = 700;
-const USP_HOLD_MS = 6000;
-const DIVE_DUR_MS = 300;
-const UTURN_DUR_MS = 360;
-const EXIT_DUR_MS = 460;
+// Centralized plane-reveal timing configuration
+const REVEAL_TIMING = {
+  greeting: 1000,
+  greetingNamePause: 200,
+  name: 1000,
+  uspLine: 1100,
+  uspDivePause: 250,
+  uspEndCtaDelay: 300,
+  roleReveal: 1200,
+  roleHold: 2800,
+  roleHide: 1000,
+  rolePhrasePause: 300,
+  dive: 250,
+  uturn: 360,
+  exit: 460,
+  uspHold: 6000,
+};
 
-// Gentle cruise easing so plane moves smoothly across each line
-function cruiseEase(t) {
-  return 0.82 * t + 0.18 * (0.5 - 0.5 * Math.cos(Math.PI * t));
+// Smooth ease-in-out easing for natural airplane flight across each line
+function easeInOutLine(t) {
+  return 0.5 - 0.5 * Math.cos(Math.PI * t);
 }
 
 // Evaluate cubic Bezier point & tangent angle (deg, where plane nose points UP at 0deg)
@@ -402,7 +410,7 @@ export default function Home() {
           const line = getLine();
           const lineEl = getLineEl();
           if (!line) return;
-          const eased = cruiseEase(t);
+          const eased = easeInOutLine(t);
           const progress = forward ? eased : 1 - eased;
           const x = rtl
             ? line.right - progress * line.width
@@ -419,7 +427,7 @@ export default function Home() {
 
   // Helper: short curved dive between two line endpoints
   const flyDive = useCallback(
-    async ({ planeEl, fromPt, toPt, rtl, cancelToken }) => {
+    async ({ planeEl, fromPt, toPt, rtl, cancelToken, durationMs = REVEAL_TIMING.dive }) => {
       const dir = rtl ? -1 : 1;
       const p0 = fromPt;
       const p3 = toPt;
@@ -427,7 +435,7 @@ export default function Home() {
       const p2 = { x: p3.x - dir * 26, y: p3.y - 10 };
 
       return runSegment(
-        DIVE_DUR_MS,
+        durationMs,
         (t) => {
           const eased = 0.5 - 0.5 * Math.cos(Math.PI * t);
           const pt = evalCubicBezier(p0, p1, p2, p3, eased);
@@ -441,14 +449,14 @@ export default function Home() {
 
   // Helper: smooth U-turn arc at line end/start
   const flyUTurn = useCallback(
-    async ({ planeEl, anchorPt, outwardDir, cancelToken }) => {
+    async ({ planeEl, anchorPt, outwardDir, cancelToken, durationMs = REVEAL_TIMING.uturn }) => {
       const p0 = anchorPt;
       const p3 = anchorPt;
       const p1 = { x: anchorPt.x + outwardDir * 32, y: anchorPt.y - 18 };
       const p2 = { x: anchorPt.x + outwardDir * 32, y: anchorPt.y + 18 };
 
       return runSegment(
-        UTURN_DUR_MS,
+        durationMs,
         (t) => {
           const eased = 0.5 - 0.5 * Math.cos(Math.PI * t);
           const pt = evalCubicBezier(p0, p1, p2, p3, eased);
@@ -505,7 +513,7 @@ export default function Home() {
       roleLineRefs.current.forEach((el) => setLineClip(el, 0, isRtl));
       uspLineRefs.current.forEach((el) => setLineClip(el, 0, isRtl));
 
-      const revealBlock = async (key, refs, durPerLine) => {
+      const revealBlock = async (key, refs, durPerLine, divePause = REVEAL_TIMING.dive) => {
         const list = linesRef.current[key];
         for (let i = 0; i < list.length; i++) {
           if (cancelToken.cancelled) return false;
@@ -519,6 +527,7 @@ export default function Home() {
                 toPt: getEndpoint(curr, false),
                 rtl: isRtl,
                 cancelToken,
+                durationMs: divePause,
               });
               if (!ok) return false;
             }
@@ -537,11 +546,11 @@ export default function Home() {
         return true;
       };
 
-      // Step 1: Greeting (~0.6s)
-      if (!(await revealBlock("greeting", greetingLineRefs, GREETING_DUR_MS))) return;
+      // Step 1: Greeting (~1.0s)
+      if (!(await revealBlock("greeting", greetingLineRefs, REVEAL_TIMING.greeting))) return;
       revealedStateRef.current.greeting = true;
 
-      // Dive Greeting -> Name
+      // Dive Greeting -> Name (with 0.2s pause)
       const lastG = linesRef.current.greeting.at(-1);
       const firstN = linesRef.current.name[0];
       if (lastG && firstN) {
@@ -552,13 +561,14 @@ export default function Home() {
             toPt: getEndpoint(firstN, false),
             rtl: isRtl,
             cancelToken,
+            durationMs: REVEAL_TIMING.greetingNamePause,
           }))
         )
           return;
       }
 
-      // Step 2: Name (~0.6s)
-      if (!(await revealBlock("name", nameLineRefs, NAME_DUR_MS))) return;
+      // Step 2: Name (~1.0s)
+      if (!(await revealBlock("name", nameLineRefs, REVEAL_TIMING.name))) return;
       revealedStateRef.current.name = true;
 
       // Dive Name -> Role
@@ -572,13 +582,14 @@ export default function Home() {
             toPt: getEndpoint(firstR, false),
             rtl: isRtl,
             cancelToken,
+            durationMs: REVEAL_TIMING.dive,
           }))
         )
           return;
       }
 
       // Step 3: Role first pass
-      if (!(await revealBlock("role", roleLineRefs, ROLE_LINE_DUR_MS))) return;
+      if (!(await revealBlock("role", roleLineRefs, REVEAL_TIMING.roleReveal))) return;
 
       // Dive Role -> USP
       const lastR = linesRef.current.role.at(-1);
@@ -591,13 +602,14 @@ export default function Home() {
             toPt: getEndpoint(firstU, false),
             rtl: isRtl,
             cancelToken,
+            durationMs: REVEAL_TIMING.dive,
           }))
         )
           return;
       }
 
-      // Step 4: USP line-by-line (~0.7s per line)
-      if (!(await revealBlock("usp", uspLineRefs, USP_LINE_DUR_MS))) return;
+      // Step 4: USP line-by-line (~1.1s per line, 0.25s dive pause between lines)
+      if (!(await revealBlock("usp", uspLineRefs, REVEAL_TIMING.uspLine, REVEAL_TIMING.uspDivePause))) return;
       revealedStateRef.current.usp = true;
 
       // Fly off the reading-end edge and fade out
@@ -609,7 +621,7 @@ export default function Home() {
         const p1 = { x: startPt.x + dir * 40, y: startPt.y - 2 };
         const p2 = { x: startPt.x + dir * 82, y: startPt.y - 14 };
         await runSegment(
-          EXIT_DUR_MS,
+          REVEAL_TIMING.exit,
           (t) => {
             const pt = evalCubicBezier(startPt, p1, p2, endPt, t);
             setPlanePose(planeEl, pt.x, pt.y, pt.deg, 1 - t);
@@ -620,6 +632,8 @@ export default function Home() {
       if (planeEl) planeEl.style.opacity = "0";
 
       revealedStateRef.current.introDone = true;
+      // CTA buttons fade in 0.3s after the USP finishes
+      await runSegment(REVEAL_TIMING.uspEndCtaDelay, () => {}, cancelToken);
       setShowCtas(true);
       setRoleLoopReady(true);
       if (LOOP_USP) setUspLoopReady(true);
@@ -701,7 +715,7 @@ export default function Home() {
             planeEl,
             getLine: () => linesRef.current.role[i],
             getLineEl: () => roleLineRefs.current[i],
-            durationMs: ROLE_LINE_DUR_MS,
+            durationMs: REVEAL_TIMING.roleReveal,
             forward: true,
             rtl: isRtl,
             cancelToken,
@@ -715,8 +729,8 @@ export default function Home() {
         );
       }
 
-      // Hold visible for 2.2s
-      const held = await runSegment(ROLE_HOLD_MS, () => {}, cancelToken);
+      // Hold visible for 2.8s
+      const held = await runSegment(REVEAL_TIMING.roleHold, () => {}, cancelToken);
       if (!held) return;
 
       // Smooth U-turn at the end of the last role line
@@ -732,7 +746,7 @@ export default function Home() {
       });
       if (!okTurn) return;
 
-      // Fly back in reverse (end -> start) hiding each line behind the plane
+      // Fly back in reverse (end -> start) hiding each line behind the plane (1.0s)
       for (let i = list.length - 1; i >= 0; i--) {
         if (cancelToken.cancelled) return;
         if (i < list.length - 1) {
@@ -753,13 +767,16 @@ export default function Home() {
           planeEl,
           getLine: () => linesRef.current.role[i],
           getLineEl: () => roleLineRefs.current[i],
-          durationMs: Math.round(ROLE_LINE_DUR_MS * 0.78),
+          durationMs: REVEAL_TIMING.roleHide,
           forward: false,
           rtl: isRtl,
           cancelToken,
         });
         if (!ok) return;
       }
+
+      // 0.3s pause before the next phrase
+      await runSegment(REVEAL_TIMING.rolePhrasePause, () => {}, cancelToken);
 
       // Switch to the alternating phrase (next effect run will reveal it)
       roleNeedsRevealRef.current = true;
@@ -807,7 +824,7 @@ export default function Home() {
 
     (async () => {
       while (!cancelToken.cancelled) {
-        if (!(await runSegment(USP_HOLD_MS, () => {}, cancelToken))) return;
+        if (!(await runSegment(REVEAL_TIMING.uspHold, () => {}, cancelToken))) return;
 
         const list = linesRef.current.usp;
         const last = list[list.length - 1];
@@ -829,7 +846,7 @@ export default function Home() {
               planeEl,
               getLine: () => linesRef.current.usp[i],
               getLineEl: () => uspLineRefs.current[i],
-              durationMs: Math.round(USP_LINE_DUR_MS * 0.75),
+              durationMs: Math.round(REVEAL_TIMING.uspLine * 0.75),
               forward: false,
               rtl: isRtl,
               cancelToken,
@@ -863,6 +880,7 @@ export default function Home() {
                   toPt: getEndpoint(curr, false),
                   rtl: isRtl,
                   cancelToken,
+                  durationMs: REVEAL_TIMING.uspDivePause,
                 }))
               )
                 return;
@@ -873,7 +891,7 @@ export default function Home() {
               planeEl,
               getLine: () => linesRef.current.usp[i],
               getLineEl: () => uspLineRefs.current[i],
-              durationMs: USP_LINE_DUR_MS,
+              durationMs: REVEAL_TIMING.uspLine,
               forward: true,
               rtl: isRtl,
               cancelToken,
