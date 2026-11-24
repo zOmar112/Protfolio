@@ -499,11 +499,13 @@ const en = {
     ],
   },
   testimonials: {
+    sectionNum: "08. TESTIMONIALS",
     title: "Testimonials & Feedback",
-    subtitle: "What mentors, teammates, and clients say about working with me.",
-    badge: "Coming Soon",
+    subtitle: "Feedback from mentors, instructors, and collaborators.",
+    leaveButton: "Leave a Testimonial",
+    badge: "AWAITING VERIFIED REVIEWS",
     placeholderTitle: "Testimonials Coming Soon",
-    placeholderText: "Client reviews and feedback from current projects and collaborations will be featured here shortly.",
+    placeholderText: "Verified feedback from academic mentors, instructors, and project collaborators will be published here once shared.",
   },
   footer: {
     intro:
