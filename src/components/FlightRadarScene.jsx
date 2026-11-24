@@ -250,14 +250,14 @@ export default function FlightRadarScene({
                   isStatic
                     ? { opacity: 0.4 }
                     : {
-                        transformBox: "fill-box",
-                        transformOrigin: "center",
-                        animationName: "fr-cairo-pulse",
-                        animationDuration: "2.8s",
-                        animationTimingFunction: "ease-out",
-                        animationIterationCount: "infinite",
-                        animationPlayState: playState,
-                      }
+                      transformBox: "fill-box",
+                      transformOrigin: "center",
+                      animationName: "fr-cairo-pulse",
+                      animationDuration: "2.8s",
+                      animationTimingFunction: "ease-out",
+                      animationIterationCount: "infinite",
+                      animationPlayState: playState,
+                    }
                 }
               />
             )}
@@ -273,8 +273,8 @@ export default function FlightRadarScene({
                     ? "#3b82f6"
                     : "#2563eb"
                   : isDark
-                  ? "#93c5fd"
-                  : "#2563eb"
+                    ? "#93c5fd"
+                    : "#2563eb"
               }
               fillOpacity={city.isCairo ? 0.92 : isDark ? 0.62 : 0.48}
             />
@@ -294,8 +294,8 @@ export default function FlightRadarScene({
                       ? "#93c5fd"
                       : "#1d4ed8"
                     : isDark
-                    ? "#bfdbfe"
-                    : "#1e40af"
+                      ? "#bfdbfe"
+                      : "#1e40af"
                 }
                 opacity={city.isCairo ? (isDark ? 0.62 : 0.52) : isDark ? 0.4 : 0.36}
               >
@@ -316,18 +316,18 @@ export default function FlightRadarScene({
               style={
                 isStatic
                   ? {
-                      transform: `translate(${staticPt.x}px, ${staticPt.y}px) rotate(${staticPt.deg}deg)`,
-                      opacity: isDark ? 0.72 : 0.58,
-                    }
+                    transform: `translate(${staticPt.x}px, ${staticPt.y}px) rotate(${staticPt.deg}deg)`,
+                    opacity: isDark ? 0.72 : 0.58,
+                  }
                   : {
-                      animationName: `fr-${flight.id}`,
-                      animationDuration: flight.dur,
-                      animationDelay: flight.delay,
-                      animationTimingFunction: "linear",
-                      animationIterationCount: "infinite",
-                      animationPlayState: playState,
-                      willChange: "transform, opacity",
-                    }
+                    animationName: `fr-${flight.id}`,
+                    animationDuration: flight.dur,
+                    animationDelay: flight.delay,
+                    animationTimingFunction: "linear",
+                    animationIterationCount: "infinite",
+                    animationPlayState: playState,
+                    willChange: "transform, opacity",
+                  }
               }
             >
               {/* Short fading trail directly behind tail (+y in local plane coords) */}
@@ -363,27 +363,25 @@ export default function FlightRadarScene({
       {!isPreview && (
         <div
           aria-hidden="true"
-          className={`hidden sm:flex fixed bottom-6 right-6 flex-col items-end gap-0.5 select-none pointer-events-none ${
-            isDark ? "text-blue-200/40" : "text-blue-900/35"
-          }`}
+          className={`hidden sm:flex fixed bottom-6 right-6 flex-col items-end gap-0.5 select-none pointer-events-none ${isDark ? "text-blue-200/40" : "text-blue-900/35"
+            }`}
           style={{
             fontFamily: '"B612 Mono", ui-monospace, monospace',
           }}
         >
           <div className="flex items-center gap-1.5 text-[10px] tracking-[0.14em] uppercase font-semibold">
             <span
-              className={`w-1.5 h-1.5 rounded-full ${
-                isDark ? "bg-emerald-400" : "bg-emerald-600"
-              }`}
+              className={`w-1.5 h-1.5 rounded-full ${isDark ? "bg-emerald-400" : "bg-emerald-600"
+                }`}
               style={
                 isStatic
                   ? { opacity: 0.7 }
                   : {
-                      animationName: "fr-hud-blink",
-                      animationDuration: "1.4s",
-                      animationIterationCount: "infinite",
-                      animationPlayState: playState,
-                    }
+                    animationName: "fr-hud-blink",
+                    animationDuration: "1.4s",
+                    animationIterationCount: "infinite",
+                    animationPlayState: playState,
+                  }
               }
             />
             <span>LIVE TRACKING</span>
