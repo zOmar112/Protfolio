@@ -1,5 +1,6 @@
 import PlaneCursor from "./components/PlaneCursor";
 import AviationBackground from "./components/AviationBackground";
+import IntroLoader from "./components/IntroLoader";
 import Navbar from "./components/Navbar";
 import Home from "./components/sections/Home";
 import About from "./components/sections/About";
@@ -28,6 +29,7 @@ export default function App() {
         <Achievements />
         <Testimonials />
       </main>
+      <IntroLoader />
     </>
   );
 }
