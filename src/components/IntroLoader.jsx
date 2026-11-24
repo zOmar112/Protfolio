@@ -90,9 +90,27 @@ export default function IntroLoader() {
             className="absolute w-72 h-72 sm:w-96 sm:h-96 rounded-full pointer-events-none"
             style={{
               background:
-                "radial-gradient(circle, rgba(37, 99, 235, 0.16) 0%, rgba(34, 211, 238, 0.05) 45%, transparent 72%)",
+                "radial-gradient(circle, rgba(37, 99, 235, 0.18) 0%, rgba(34, 211, 238, 0.06) 45%, transparent 72%)",
             }}
           />
+
+          {/* Logo with subtle scale / fade-in entrance */}
+          <motion.div
+            initial={reduced ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: reduced ? 0.15 : 0.45, ease: "easeOut" }}
+            className="mb-4 relative"
+          >
+            <div
+              aria-hidden="true"
+              className="absolute inset-0 rounded-2xl bg-cyan-500/20 blur-xl pointer-events-none"
+            />
+            <img
+              src="/logo.png"
+              alt="Omar Ibrahim"
+              className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-2xl object-contain shadow-lg"
+            />
+          </motion.div>
 
           {/* Centerpiece: Takeoff Flight Arc + Glowing Contrail + Airplane */}
           <div className="relative w-[280px] h-[130px] mb-5">
@@ -197,19 +215,6 @@ export default function IntroLoader() {
               <CommercialPlaneSvg />
             </motion.div>
           </div>
-
-          {/* Monogram "OI" */}
-          <motion.div
-            initial={reduced ? { opacity: 1 } : { opacity: 0, y: 6 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: reduced ? 0.1 : 0.35, ease: "easeOut" }}
-            className="text-2xl sm:text-3xl font-bold tracking-[0.28em] text-white ps-[0.28em] mb-4"
-            style={{
-              textShadow: "0 0 20px rgba(56, 189, 248, 0.35)",
-            }}
-          >
-            OI
-          </motion.div>
 
           {/* Thin 1.5s progress bar */}
           <div className="w-44 sm:w-52 h-[2px] rounded-full bg-white/10 overflow-hidden">
