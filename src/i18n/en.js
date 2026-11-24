@@ -20,6 +20,9 @@ const en = {
     usp: "I help teams and organizations turn raw data into clear predictions through machine learning models I build and test on real datasets.",
     viewWork: "View My Work",
     downloadCv: "Download CV",
+    cvDialogMessage: "My CV isn't available yet. It will be added soon.",
+    cvDialogButton: "Got it",
+    cvDialogClose: "Close dialog",
   },
   about: {
     hook: "Turning raw data into clear predictions",
