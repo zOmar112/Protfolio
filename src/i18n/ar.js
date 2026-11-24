@@ -25,36 +25,44 @@ const ar = {
     hook: "أحوّل البيانات الخام إلى تنبؤات واضحة",
     p1: "أنا عمر إبراهيم، طالب في السنة الثالثة بقسم حاسبات ومعلومات طيران في الزقازيق. أساعد الفرق والمؤسسات على تحويل البيانات الخام إلى تنبؤات واضحة من خلال نماذج Machine Learning أبنيها وأختبرها على بيانات حقيقية. خلال دراستي لمقرر Machine Learning، قمت ببناء Pipeline متكامل للتنبؤ بما إذا كان الدخل يتجاوز 50 ألف دولار (بتقييم 98 للمشروع)، بالإضافة إلى تحليل استكشافي مع Data Cleaning وFeature Engineering على مجموعة بيانات Home Credit Default Risk.",
     p2: "كما ساهمت في مشروع Vortex-Gen، وهو نفق رياح افتراضي للطيران قام فريقنا بتطويره عبر إضافة محتوى تعليمي حول موضوعات متعددة في مجال الطيران، وحصدنا المركز الثالث في Hackathon. لديّ شغف كبير بكرة القدم، وأرحب دائماً بفرصة لتطبيق Data Analysis على تحليل الأداء والمباريات واللاعبين.",
-    tags: [
-      "Python",
-      "Pandas",
-      "Seaborn",
-      "Jupyter",
-      "Machine Learning",
-      "Data Cleaning",
-      "EDA",
-      "React",
-    ],
-    card: {
-      title: "نظرة سريعة",
-      student: "طالب بالسنة الثالثة",
-      location: "الزقازيق",
-      faculty: "حاسبات ومعلومات طيران",
-      openTo: "متاح لـ: Internship / Junior Data Analyst",
-    },
   },
   education: {
     study: {
       degree: "بكالوريوس حاسبات ومعلومات طيران",
-      institution: "جامعة الزقازيق",
+      institution: "جامعة الزقازيق الأهلية",
       location: "الزقازيق",
       year: "السنة الثالثة",
-      expectedGraduation: "سنة التخرج المتوقعة: 2026",
-      gpa: "",
+      expectedGraduation: "التخرج المتوقع: 2028",
       coursesLabel: "المقررات الرئيسية",
       courses: "نظم الطيران والمراقبة الجوية (ATC)، نظم قواعد البيانات، نظم التشغيل، بنية الحاسب، علم البيانات",
-      completed: "أنجزت: مقرر Machine Learning (EDA، تنظيف البيانات، وبناء النماذج)",
+      completed: "أنجزت: كورس Machine Learning for Data Analysis، المعهد القومي للاتصالات (NTI) (120 ساعة)",
+      inProgressBadge: "قيد التقدم",
+      inProgressCourse: "كورس تعلّم الآلة، المعهد القومي للاتصالات (NTI): الشهادة قريبًا",
     },
+    certificatesTitle: "الشهادات",
+    certificates: [
+      {
+        id: "nti-ml",
+        logoText: "NTI",
+        badge: "قريبًا",
+        title: "Machine Learning for Data Analysis",
+        duration: "120 ساعة",
+        issuer: "المعهد القومي للاتصالات (NTI)",
+        description:
+          "كورس يغطي معالجة البيانات واستكشافها، التعلّم الموجه وغير الموجه، تقييم النماذج، وتصوّر البيانات، مع مشاريع عملية على مجموعات بيانات حقيقية.",
+        skillsLabel: "أهم المهارات والمحاور:",
+        skills: [
+          "Data Preprocessing",
+          "EDA",
+          "Feature Engineering",
+          "Supervised Learning",
+          "Unsupervised Learning",
+          "Model Evaluation",
+          "scikit-learn",
+        ],
+        placeholderText: "ستتم إضافة الشهادة قريبًا",
+      },
+    ],
   },
   skills: {
     items: [
@@ -182,6 +190,8 @@ const ar = {
   projects: {
     viewProject: "عرض المشروع",
     demo: "عرض تجريبي",
+    viewDetails: "عرض التفاصيل",
+    closeModal: "إغلاق النافذة",
     problemLabel: "المشكلة",
     roleLabel: "الدور",
     solutionLabel: "الحل",
@@ -193,7 +203,7 @@ const ar = {
         badge: "مشروع دراسي",
         title: "Adult Income Prediction",
         oneLiner: "Pipeline متكامل لتعلّم الآلة للتنبؤ بفئة الدخل من بيانات التعداد السكاني.",
-        cover: "",
+        cover: "/projects/adult-income.webp",
         problem:
           "التنبؤ بما إذا كان الدخل السنوي للفرد يتجاوز 50,000 دولار باستخدام مجموعة بيانات UCI Adult Census Income.",
         role: "مطور تعلم الآلة (معالجة البيانات، بناء النماذج، والتقييم)",
@@ -210,7 +220,7 @@ const ar = {
         badge: "مشروع دراسي",
         title: "Home Credit Default Risk EDA",
         oneLiner: "تحليل استكشافي شامل، وهندسة الخصائص، وتنظيف البيانات لمخاطر الائتمان.",
-        cover: "",
+        cover: "/projects/home-credit.webp",
         problem:
           "فهم بيانات Home Credit Default Risk وتجهيزها لمرحلة بناء النماذج.",
         role: "محلل بيانات وهندسة خصائص",
@@ -227,7 +237,7 @@ const ar = {
         badge: "مشروع جماعي — هاكاثون",
         title: "Vortex-Gen",
         oneLiner: "نفق رياح افتراضي للطيران مع محاكاة أجنحة ومحتوى تعليمي.",
-        cover: "",
+        cover: "/projects/vortex-gen.png",
         problem: "صعوبة وصول الطلاب لأدوات محاكاة تفاعلية عبر الويب لتصور تدفق الهواء حول الأجنحة لحظياً.",
         role: "مطور الواجهة الأمامية ودمج واجهات المحاكاة",
         solution:
@@ -236,14 +246,14 @@ const ar = {
         result: "المركز الثالث في هاكاثون الطيران.",
         tags: ["React", "TypeScript", "Vite", "Simulation"],
         viewLink: "https://github.com/zOmar112/vortex.beta",
-        demoLink: "",
+        demoLink: "https://vortex-gen.vercel.app/",
       },
       {
         id: "ber-store",
         badge: "مشروع شخصي",
         title: "متجر بِرّ (Ber Store)",
         oneLiner: "متجر عبايات إلكتروني يدعم العربية أولاً، بُني بأدوات البرمجة بالذكاء الاصطناعي.",
-        cover: "",
+        cover: "/projects/ber-store.webp",
         problem: "الحاجة لمتجر إلكتروني عربي سهل الاستخدام يتيح الشراء السلس عبر واتساب دون الحاجة لفريق برمجي.",
         role: "المطوّر الوحيد، باستخدام أدوات البرمجة بالذكاء الاصطناعي.",
         solution:
@@ -252,7 +262,7 @@ const ar = {
         result: "تسليم متجر إلكتروني متكامل وسريع مع لوحة تحكم كاملة ومسار طلب فوري عبر WhatsApp.",
         tags: ["React", "TailwindCSS", "Supabase", "Vercel", "Framer Motion"],
         viewLink: "https://github.com/zOmar112/ber",
-        demoLink: "",
+        demoLink: "https://ber-git-main-omar-ber-store.vercel.app/",
       },
     ],
   },
@@ -305,9 +315,6 @@ const ar = {
   footer: {
     intro:
       "عمر إبراهيم — طالب حاسبات ومعلومات طيران في الزقازيق. أساعد في تحويل البيانات الخام إلى تنبؤات واضحة عبر نماذج تعلّم آلة مبنية ومُختبرة على بيانات حقيقية.",
-    contactTitle: "معلومات التواصل",
-    socialTitle: "الشبكات والروابط",
-    rights: "جميع الحقوق محفوظة.",
   },
   sections: {
     home: "الرئيسية",

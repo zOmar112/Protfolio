@@ -1,5 +1,6 @@
 import { useLanguage } from "../../context/LanguageContext";
 import Section from "../Section";
+import { formatNumbers } from "../../utils/formatNumbers";
 
 export default function Experience() {
   const { t } = useLanguage();
@@ -44,7 +45,7 @@ export default function Experience() {
                 </div>
                 {entry.date && (
                   <span className="text-xs sm:text-sm font-medium px-3 py-1 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 border border-gray-200 dark:border-gray-700/60">
-                    {entry.date}
+                    {formatNumbers(entry.date)}
                   </span>
                 )}
               </div>

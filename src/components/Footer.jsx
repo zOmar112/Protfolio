@@ -1,9 +1,5 @@
 import { useLanguage } from "../context/LanguageContext";
 
-function isFilled(val) {
-  return Boolean(val && val.trim() !== "");
-}
-
 function GitHubIcon() {
   return (
     <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -26,110 +22,50 @@ function LinkedInIcon() {
 
 export default function Footer() {
   const { t } = useLanguage();
-  const contact = t.contact;
   const footer = t.footer;
-
-  const hasEmail = isFilled(contact.email);
-  const hasWhatsapp = isFilled(contact.whatsapp);
-  const hasGithub = isFilled(contact.socials?.github);
-  const hasLinkedin = isFilled(contact.socials?.linkedin);
 
   return (
     <footer className="border-t border-gray-200 dark:border-gray-800 bg-white/50 dark:bg-gray-950/50 transition-colors">
-      <div className="max-w-7xl mx-auto px-6 py-12 md:py-16">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-8 mb-12">
-          {/* Column 1: Short intro */}
-          <div>
-            <span className="text-xl font-black tracking-wider text-accent block mb-3">
-              OI
-            </span>
-            <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed max-w-sm">
-              {footer.intro}
-            </p>
-          </div>
+      <div className="max-w-7xl mx-auto px-6 py-12 md:py-16 flex flex-col items-center text-center">
+        {/* Short intro column: logo + one-line intro */}
+        <div className="flex items-center justify-center mb-3">
+          <img
+            src="/logo.png"
+            alt="Omar Ibrahim"
+            className="w-12 h-12 rounded-xl object-contain shadow-xs"
+          />
+        </div>
+        <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed max-w-lg mb-6">
+          {footer.intro}
+        </p>
 
-          {/* Column 2: Contact links (hidden if values are empty) */}
-          <div>
-            <h4 className="text-sm font-semibold text-gray-900 dark:text-white uppercase tracking-wider mb-4">
-              {footer.contactTitle}
-            </h4>
-            <ul className="space-y-2.5 text-sm">
-              {hasEmail && (
-                <li>
-                  <a
-                    href={`mailto:${contact.email}`}
-                    className="text-gray-600 dark:text-gray-400 hover:text-accent transition-colors"
-                  >
-                    {contact.email}
-                  </a>
-                </li>
-              )}
-              {hasWhatsapp && (
-                <li>
-                  <a
-                    href={`https://wa.me/${contact.whatsapp.replace(/[^0-9]/g, "")}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-gray-600 dark:text-gray-400 hover:text-accent transition-colors"
-                  >
-                    {contact.whatsapp}
-                  </a>
-                </li>
-              )}
-              <li>
-                <a
-                  href="#contact"
-                  className="text-gray-600 dark:text-gray-400 hover:text-accent transition-colors inline-block"
-                >
-                  {t.sections.contact}
-                </a>
-              </li>
-            </ul>
-          </div>
-
-          {/* Column 3: Logo + Social icons */}
-          <div>
-            <h4 className="text-sm font-semibold text-gray-900 dark:text-white uppercase tracking-wider mb-4">
-              {footer.socialTitle}
-            </h4>
-            <div className="flex items-center gap-3">
-              {hasGithub && (
-                <a
-                  href={contact.socials.github}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-2.5 rounded-xl border border-gray-200 dark:border-gray-800 text-gray-700 dark:text-gray-300 hover:text-accent hover:border-accent dark:hover:border-accent transition-colors cursor-pointer"
-                  aria-label="GitHub"
-                >
-                  <GitHubIcon />
-                </a>
-              )}
-              {hasLinkedin && (
-                <a
-                  href={contact.socials.linkedin}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-2.5 rounded-xl border border-gray-200 dark:border-gray-800 text-gray-700 dark:text-gray-300 hover:text-accent hover:border-accent dark:hover:border-accent transition-colors cursor-pointer"
-                  aria-label="LinkedIn"
-                >
-                  <LinkedInIcon />
-                </a>
-              )}
-            </div>
-          </div>
+        {/* Row of icon links */}
+        <div className="flex items-center justify-center gap-3 mb-8">
+          <a
+            href="https://github.com/zOmar112"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="p-2.5 rounded-xl border border-gray-200 dark:border-gray-800 text-gray-700 dark:text-gray-300 hover:text-accent hover:border-accent dark:hover:border-accent transition-colors cursor-pointer"
+            aria-label="GitHub"
+          >
+            <GitHubIcon />
+          </a>
+          <a
+            href="https://www.linkedin.com/in/omarsolimn"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="p-2.5 rounded-xl border border-gray-200 dark:border-gray-800 text-gray-700 dark:text-gray-300 hover:text-accent hover:border-accent dark:hover:border-accent transition-colors cursor-pointer"
+            aria-label="LinkedIn"
+          >
+            <LinkedInIcon />
+          </a>
         </div>
 
-        {/* Bottom copyright line */}
-        <div className="border-t border-gray-100 dark:border-gray-900 pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-gray-500 dark:text-gray-500 gap-2">
-          <p>
-            © {new Date().getFullYear()} Omar Ibrahim. {footer.rights}
+        {/* Small centered line */}
+        <div className="w-full max-w-lg border-t border-gray-100 dark:border-gray-900 pt-6">
+          <p className="text-xs text-gray-500 dark:text-gray-500">
+            © <span className="number-highlight">2026</span> Omar Ibrahim
           </p>
-          <a
-            href="#home"
-            className="hover:text-accent transition-colors"
-          >
-            ↑ Top
-          </a>
         </div>
       </div>
     </footer>

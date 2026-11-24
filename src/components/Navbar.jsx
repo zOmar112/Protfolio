@@ -149,16 +149,21 @@ export default function Navbar() {
       }`}
     >
       <div className="max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-6 h-16">
-        {/* Logo: Initials "OI" */}
+        {/* Logo */}
         <a
           href="#home"
           onClick={(e) => {
             e.preventDefault();
             handleNav("home");
           }}
-          className="text-2xl font-black tracking-wider text-accent hover:opacity-80 transition-opacity"
+          className="flex items-center hover:opacity-85 transition-opacity cursor-pointer"
+          aria-label="Omar Ibrahim"
         >
-          {t.nav.logo || "OI"}
+          <img
+            src="/logo.png"
+            alt="Omar Ibrahim"
+            className="w-10 h-10 rounded-xl object-contain"
+          />
         </a>
 
         {/* Desktop nav links */}

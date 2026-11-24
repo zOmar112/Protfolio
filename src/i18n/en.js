@@ -25,36 +25,44 @@ const en = {
     hook: "Turning raw data into clear predictions",
     p1: "I'm Omar Ibrahim, a third-year Aviation Computers and Information student in Zagazig. I help teams and organizations turn raw data into clear predictions through machine learning models I build and test on real datasets. In my machine learning course I built an end-to-end pipeline that predicts whether income exceeds $50K (project score 98), and an exploratory analysis with data cleaning and feature engineering on the Home Credit Default Risk dataset.",
     p2: "I also contributed to Vortex-Gen, a virtual aviation wind tunnel that our team extended with educational content on several aviation topics, and we placed third in a hackathon. I'm passionate about football and would welcome a chance to apply data analysis to performance, match, or player analysis.",
-    tags: [
-      "Python",
-      "Pandas",
-      "Seaborn",
-      "Jupyter",
-      "Machine Learning",
-      "Data Cleaning",
-      "EDA",
-      "React",
-    ],
-    card: {
-      title: "Quick Facts",
-      student: "Third-year student",
-      location: "Zagazig",
-      faculty: "Aviation Computers and Information",
-      openTo: "Open to: Internship / Junior Data Analyst",
-    },
   },
   education: {
     study: {
       degree: "B.Sc. in Aviation Computers and Information",
-      institution: "Zagazig University",
+      institution: "Zagazig National University",
       location: "Zagazig",
       year: "Third Year",
-      expectedGraduation: "Expected Graduation: 2026",
-      gpa: "",
+      expectedGraduation: "Expected Graduation: 2028",
       coursesLabel: "Key Courses",
       courses: "Aviation and ATC systems, database systems, operating systems, computer architecture, data science",
-      completed: "Completed: Machine Learning course (EDA, data cleaning, and modeling)",
+      completed: "Completed: Machine Learning for Data Analysis, NTI (120 hours)",
+      inProgressBadge: "In progress",
+      inProgressCourse: "Machine Learning course, National Telecommunication Institute (NTI): certificate coming soon",
     },
+    certificatesTitle: "Certificates",
+    certificates: [
+      {
+        id: "nti-ml",
+        logoText: "NTI",
+        badge: "Coming Soon",
+        title: "Machine Learning for Data Analysis",
+        duration: "120 hours",
+        issuer: "National Telecommunication Institute (NTI)",
+        description:
+          "Course covering data preprocessing and exploration, supervised and unsupervised learning, model evaluation, and data visualization, with hands-on projects on real-world datasets.",
+        skillsLabel: "KEY LEARNINGS & SKILLS:",
+        skills: [
+          "Data Preprocessing",
+          "EDA",
+          "Feature Engineering",
+          "Supervised Learning",
+          "Unsupervised Learning",
+          "Model Evaluation",
+          "scikit-learn",
+        ],
+        placeholderText: "Certificate will be added soon",
+      },
+    ],
   },
   skills: {
     items: [
@@ -184,6 +192,8 @@ const en = {
   projects: {
     viewProject: "View Project",
     demo: "Demo",
+    viewDetails: "View Details",
+    closeModal: "Close modal",
     problemLabel: "Problem",
     roleLabel: "Role",
     solutionLabel: "Solution",
@@ -195,7 +205,7 @@ const en = {
         badge: "Course Project",
         title: "Adult Income Prediction",
         oneLiner: "End-to-end ML classification pipeline predicting income bracket from census data.",
-        cover: "",
+        cover: "/projects/adult-income.webp",
         problem:
           "Predict whether an individual's annual income exceeds $50,000 using the UCI Adult Census Income dataset.",
         role: "Machine Learning Developer (Data preprocessing, modeling, evaluation)",
@@ -212,7 +222,7 @@ const en = {
         badge: "Course Project",
         title: "Home Credit Default Risk EDA",
         oneLiner: "Exploratory analysis, feature engineering, and data cleaning on credit risk data.",
-        cover: "",
+        cover: "/projects/home-credit.webp",
         problem:
           "Understand the Home Credit Default Risk data and prepare it for modeling.",
         role: "Data Analyst & Feature Engineer",
@@ -229,7 +239,7 @@ const en = {
         badge: "Team Project — Hackathon",
         title: "Vortex-Gen",
         oneLiner: "Virtual aviation wind tunnel with airfoil simulation and educational content.",
-        cover: "",
+        cover: "/projects/vortex-gen.png",
         problem: "Lack of accessible web simulation tools for students to visualize real-time airfoil airflow.",
         role: "Frontend Developer & Simulation UI integration",
         solution:
@@ -238,14 +248,14 @@ const en = {
         result: "Third place in the Aviation Hackathon.",
         tags: ["React", "TypeScript", "Vite", "Simulation"],
         viewLink: "https://github.com/zOmar112/vortex.beta",
-        demoLink: "",
+        demoLink: "https://vortex-gen.vercel.app/",
       },
       {
         id: "ber-store",
         badge: "Personal Project",
         title: "Ber Store",
         oneLiner: "Arabic-first abaya e-commerce store built with AI coding tools.",
-        cover: "",
+        cover: "/projects/ber-store.webp",
         problem: "Need for an intuitive Arabic online store allowing customers to complete orders over WhatsApp without technical complexity.",
         role: "Sole builder, using AI coding tools.",
         solution:
@@ -254,7 +264,7 @@ const en = {
         result: "Delivered a fully responsive live store with self-hosted admin control and instant WhatsApp ordering.",
         tags: ["React", "TailwindCSS", "Supabase", "Vercel", "Framer Motion"],
         viewLink: "https://github.com/zOmar112/ber",
-        demoLink: "",
+        demoLink: "https://ber-git-main-omar-ber-store.vercel.app/",
       },
     ],
   },
@@ -307,9 +317,6 @@ const en = {
   footer: {
     intro:
       "Omar Ibrahim — Aviation Computers & Information student in Zagazig. Turning raw data into clear predictions through machine learning models built and tested on real datasets.",
-    contactTitle: "Contact Info",
-    socialTitle: "Social & Profiles",
-    rights: "All rights reserved.",
   },
   sections: {
     home: "Home",

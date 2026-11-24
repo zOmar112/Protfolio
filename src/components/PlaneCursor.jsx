@@ -34,6 +34,7 @@ export default function PlaneCursor() {
   const targetPos = useRef({ x: -100, y: -100 });
   const currentPos = useRef({ x: -100, y: -100 });
   const currentAngle = useRef(0);
+  const isHovering = useRef(false);
 
   const trailPositions = useRef(
     Array.from({ length: TRAIL_LENGTH }, () => ({ x: -100, y: -100 }))
@@ -83,11 +84,12 @@ export default function PlaneCursor() {
       }
 
       const target = e.target instanceof Element ? e.target : null;
-      const isInteractive = Boolean(
-        target && target.closest("a, button, input, textarea")
+      isHovering.current = Boolean(
+        target &&
+          target.closest("a, button, [role='button'], .cursor-pointer, label")
       );
 
-      setContainerVisible(!isInteractive);
+      setContainerVisible(true);
     };
 
     const handleMouseLeave = () => {
@@ -120,8 +122,9 @@ export default function PlaneCursor() {
         currentAngle.current += angleDiff * 0.3;
       }
 
+      const scale = isHovering.current ? 1.25 : 1;
       if (planeRef.current) {
-        planeRef.current.style.transform = `translate3d(${currentPos.current.x}px, ${currentPos.current.y}px, 0) translate(-50%, -50%) rotate(${currentAngle.current}deg)`;
+        planeRef.current.style.transform = `translate3d(${currentPos.current.x}px, ${currentPos.current.y}px, 0) translate(-50%, -50%) rotate(${currentAngle.current}deg) scale(${scale})`;
       }
 
       // Update short fading trail of 6 small dots
