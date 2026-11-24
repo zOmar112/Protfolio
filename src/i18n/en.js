@@ -501,38 +501,9 @@ const en = {
   testimonials: {
     title: "Testimonials & Feedback",
     subtitle: "What mentors, teammates, and clients say about working with me.",
-    items: [
-      {
-        id: "testimonial-1",
-        name: "Dr. Ahmed Hassan",
-        role: "Machine Learning Instructor & Academic Mentor",
-        avatar: "",
-        content:
-          "Omar demonstrated an outstanding understanding of end-to-end data pipelines and classification modeling. His adult income prediction project achieved a 98% score thanks to rigorous data preprocessing, feature engineering, and thorough ROC-AUC evaluation.",
-        rating: 5,
-        project: "Adult Income Prediction Pipeline",
-      },
-      {
-        id: "testimonial-2",
-        name: "Kareem Mostafa",
-        role: "Team Lead · Vortex-Gen Hackathon",
-        avatar: "",
-        content:
-          "Working alongside Omar was a great experience. He rapidly implemented responsive simulation controls and integrated them with our aerodynamics engine under hackathon pressure, helping our team secure 3rd place.",
-        rating: 5,
-        project: "Vortex-Gen Aviation Simulator",
-      },
-      {
-        id: "testimonial-3",
-        name: "Sarah Al-Ghamdi",
-        role: "Client & Brand Owner · Ber Store",
-        avatar: "",
-        content:
-          "Omar delivered an exceptional Arabic-first online store with an intuitive admin dashboard and seamless WhatsApp ordering. His communication was prompt, calm, and highly professional throughout the project.",
-        rating: 5,
-        project: "Ber Store E-Commerce",
-      },
-    ],
+    badge: "Coming Soon",
+    placeholderTitle: "Testimonials Coming Soon",
+    placeholderText: "Client reviews and feedback from current projects and collaborations will be featured here shortly.",
   },
   footer: {
     intro:
