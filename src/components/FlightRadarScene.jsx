@@ -1,270 +1,398 @@
-/* Flight Radar Scene: faint SVG world grid, city hubs (Cairo accent), great-circle arcs & moving planes */
+import { useState, useEffect } from "react";
+
+/* Flight Radar Scene: static dot-matrix world map (Europe/Africa/MENA), real city coords, curved routes, tangent-rotated planes & subtle HUD */
+
+const PLANE_PATH =
+  "M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z";
+
+// Same Equirectangular projection bounds used to generate /public/world-dots.svg
+const MAP_W = 1200;
+const MAP_H = 675;
+const LON_MIN = -26;
+const LON_MAX = 84;
+const LAT_MAX = 65;
+const LAT_MIN = -8;
+
+function project(lon, lat) {
+  return {
+    x: Number((((lon - LON_MIN) / (LON_MAX - LON_MIN)) * MAP_W).toFixed(1)),
+    y: Number((((LAT_MAX - lat) / (LAT_MAX - LAT_MIN)) * MAP_H).toFixed(1)),
+  };
+}
+
 const CITIES = [
-  { id: "cai", code: "CAI", x: 560, y: 248, isCairo: true, chip: true },
-  { id: "dxb", code: "DXB", x: 648, y: 262, chip: true },
-  { id: "lhr", code: "LHR", x: 465, y: 158, chip: true },
-  { id: "cdg", code: "CDG", x: 482, y: 176, chip: false },
-  { id: "jfk", code: "JFK", x: 268, y: 196, chip: false },
-  { id: "ruh", code: "RUH", x: 612, y: 274, chip: false },
-  { id: "hnd", code: "HND", x: 856, y: 214, chip: false },
+  { id: "cai", code: "CAI", lon: 31.2357, lat: 30.0444, isCairo: true, dx: 11, dy: 4 },
+  { id: "dxb", code: "DXB", lon: 55.2708, lat: 25.2048, dx: 9, dy: 4 },
+  { id: "ruh", code: "RUH", lon: 46.6753, lat: 24.7136, dx: 9, dy: 12 },
+  { id: "ist", code: "IST", lon: 28.9784, lat: 41.0082, dx: 9, dy: -4 },
+  { id: "lhr", code: "LHR", lon: -0.4543, lat: 51.47, dx: -30, dy: -6 },
+  { id: "cdg", code: "CDG", lon: 2.5479, lat: 49.0097, dx: -28, dy: 12 },
+  { id: "fra", code: "FRA", lon: 8.5622, lat: 50.0379, dx: 9, dy: -5 },
+  { id: "fco", code: "FCO", lon: 12.2389, lat: 41.8003, dx: -28, dy: 11 },
+].map((city) => ({ ...city, ...project(city.lon, city.lat) }));
+
+const CITY_BY_ID = Object.fromEntries(CITIES.map((c) => [c.id, c]));
+const CAI = CITY_BY_ID.cai;
+
+// Build a curved great-circle-like quadratic Bezier arc between two projected cities
+function buildArc(from, to, bend = 0.22) {
+  const mx = (from.x + to.x) / 2;
+  const my = (from.y + to.y) / 2;
+  const dx = to.x - from.x;
+  const dy = to.y - from.y;
+  const dist = Math.hypot(dx, dy) || 1;
+  // Bend gently northward (negative y) like northern-hemisphere great-circle tracks
+  const nx = -dy / dist;
+  const ny = dx / dist;
+  const sign = ny <= 0 ? 1 : -1;
+  const cx = Number((mx + nx * dist * bend * sign).toFixed(1));
+  const cy = Number((my + ny * dist * bend * sign).toFixed(1));
+  return {
+    x0: from.x,
+    y0: from.y,
+    cx,
+    cy,
+    x1: to.x,
+    y1: to.y,
+    d: `M ${from.x} ${from.y} Q ${cx} ${cy} ${to.x} ${to.y}`,
+  };
+}
+
+// Evaluate point & analytical tangent rotation (deg) along a quadratic Bezier at t in [0,1]
+function evalArc(arc, t) {
+  const mt = 1 - t;
+  const x = mt * mt * arc.x0 + 2 * mt * t * arc.cx + t * t * arc.x1;
+  const y = mt * mt * arc.y0 + 2 * mt * t * arc.cy + t * t * arc.y1;
+  const tx = 2 * mt * (arc.cx - arc.x0) + 2 * t * (arc.x1 - arc.cx);
+  const ty = 2 * mt * (arc.cy - arc.y0) + 2 * t * (arc.y1 - arc.cy);
+  // Plane SVG nose points UP (-90 deg), so add +90 deg to atan2(ty, tx)
+  const deg = (Math.atan2(ty, tx) * 180) / Math.PI + 90;
+  return {
+    x: Number(x.toFixed(1)),
+    y: Number(y.toFixed(1)),
+    deg: Number(deg.toFixed(1)),
+  };
+}
+
+const ROUTES = [
+  { id: "cai-lhr", to: "lhr", bend: 0.22 },
+  { id: "cai-cdg", to: "cdg", bend: 0.2 },
+  { id: "cai-fra", to: "fra", bend: 0.2 },
+  { id: "cai-fco", to: "fco", bend: 0.24 },
+  { id: "cai-ist", to: "ist", bend: 0.22 },
+  { id: "cai-ruh", to: "ruh", bend: 0.22 },
+  { id: "cai-dxb", to: "dxb", bend: 0.24 },
+].map((r) => ({
+  ...r,
+  arc: buildArc(CAI, CITY_BY_ID[r.to], r.bend),
+}));
+
+const ROUTE_BY_ID = Object.fromEntries(ROUTES.map((r) => [r.id, r]));
+
+// 5 staggered aircraft flying along Cairo routes (3 visible on mobile, 5 on sm+)
+const FLIGHTS = [
+  { id: "fl-lhr", routeId: "cai-lhr", dur: "20s", delay: "-3s", staticT: 0.56, mobile: true },
+  { id: "fl-dxb", routeId: "cai-dxb", dur: "16s", delay: "-8s", staticT: 0.52, mobile: true },
+  { id: "fl-ist", routeId: "cai-ist", dur: "14s", delay: "-1s", staticT: 0.58, mobile: true },
+  { id: "fl-fra", routeId: "cai-fra", dur: "19s", delay: "-11s", staticT: 0.42, mobile: false },
+  { id: "fl-fco", routeId: "cai-fco", dur: "17s", delay: "-6s", staticT: 0.64, mobile: false },
 ];
 
-const ARCS = [
-  { id: "cai-lhr", d: "M 560 248 Q 505 182 465 158" },
-  { id: "cai-dxb", d: "M 560 248 Q 608 236 648 262" },
-  { id: "lhr-jfk", d: "M 465 158 Q 360 120 268 196" },
-  { id: "dxb-hnd", d: "M 648 262 Q 758 188 856 214" },
-  { id: "cai-cdg", d: "M 560 248 Q 518 202 482 176" },
-  { id: "cai-ruh", d: "M 560 248 Q 590 258 612 274" },
+// Generate smooth GPU-composited transform/opacity keyframes along each Bezier arc
+const FLIGHT_KEYFRAMES_CSS = FLIGHTS.map((flight) => {
+  const { arc } = ROUTE_BY_ID[flight.routeId];
+  const steps = 10;
+  const frames = [];
+  for (let i = 0; i <= steps; i++) {
+    const t = i / steps;
+    const pct = Math.round(t * 100);
+    const pt = evalArc(arc, t);
+    const opacity = i === 0 || i === steps ? 0 : i === 1 || i === steps - 1 ? 0.72 : 0.85;
+    frames.push(
+      `${pct}% { transform: translate(${pt.x}px, ${pt.y}px) rotate(${pt.deg}deg); opacity: ${opacity}; }`
+    );
+  }
+  return `@keyframes fr-${flight.id} { ${frames.join(" ")} }`;
+}).join("\n");
+
+const HUD_READOUTS = [
+  "FL350 · 480 kt",
+  "FL370 · 492 kt",
+  "FL340 · 468 kt",
+  "FL380 · 504 kt",
 ];
 
-/* Moving planes use transform/opacity keyframes only (2 hidden on mobile to keep mobile ultra-light) */
-const PLANES = [
-  {
-    id: "p1",
-    anim: "radar-plane-cai-lhr",
-    dur: "18s",
-    delay: "0s",
-    staticX: "51%",
-    staticY: "39%",
-    staticRot: -50,
-    mobile: true,
-  },
-  {
-    id: "p2",
-    anim: "radar-plane-dxb-hnd",
-    dur: "22s",
-    delay: "-6s",
-    staticX: "74%",
-    staticY: "42%",
-    staticRot: 76,
-    mobile: true,
-  },
-  {
-    id: "p3",
-    anim: "radar-plane-lhr-jfk",
-    dur: "24s",
-    delay: "-10s",
-    staticX: "36%",
-    staticY: "31%",
-    staticRot: -102,
-    mobile: false,
-  },
-  {
-    id: "p4",
-    anim: "radar-plane-cai-dxb",
-    dur: "15s",
-    delay: "-4s",
-    staticX: "60%",
-    staticY: "49%",
-    staticRot: 96,
-    mobile: false,
-  },
-];
+export default function FlightRadarScene({
+  isDark,
+  reducedMotion,
+  isPaused,
+  isPreview = false,
+}) {
+  const isStatic = reducedMotion || isPreview;
+  const playState = isPaused || isStatic ? "paused" : "running";
+  const p = isPreview ? "fr-prev" : "fr-main";
+  const [hudIdx, setHudIdx] = useState(0);
 
-export default function FlightRadarScene({ isDark, reducedMotion, isPaused }) {
-  const playState = isPaused ? "paused" : "running";
+  useEffect(() => {
+    if (isStatic || isPaused) return;
+    const id = window.setInterval(() => {
+      setHudIdx((prev) => (prev + 1) % HUD_READOUTS.length);
+    }, 5500);
+    return () => window.clearInterval(id);
+  }, [isStatic, isPaused]);
 
   return (
     <div className="absolute inset-0 overflow-hidden">
-      <style>{`
-        @keyframes cairo-pulse-ring {
-          0% { transform: scale(0.7); opacity: 0.7; }
-          100% { transform: scale(3.2); opacity: 0; }
-        }
-        @keyframes radar-plane-cai-lhr {
-          0% { transform: translate3d(56vw, 49.5vh, 0) rotate(-42deg); opacity: 0; }
-          10% { opacity: 0.65; }
-          50% { transform: translate3d(51vw, 39vh, 0) rotate(-48deg); opacity: 0.65; }
-          90% { opacity: 0.65; }
-          100% { transform: translate3d(46.5vw, 31.5vh, 0) rotate(-54deg); opacity: 0; }
-        }
-        @keyframes radar-plane-dxb-hnd {
-          0% { transform: translate3d(64.8vw, 52.4vh, 0) rotate(62deg); opacity: 0; }
-          10% { opacity: 0.6; }
-          50% { transform: translate3d(75vw, 42.5vh, 0) rotate(78deg); opacity: 0.6; }
-          90% { opacity: 0.6; }
-          100% { transform: translate3d(85.6vw, 42.8vh, 0) rotate(94deg); opacity: 0; }
-        }
-        @keyframes radar-plane-lhr-jfk {
-          0% { transform: translate3d(46.5vw, 31.6vh, 0) rotate(-78deg); opacity: 0; }
-          10% { opacity: 0.55; }
-          50% { transform: translate3d(36.2vw, 29.5vh, 0) rotate(-98deg); opacity: 0.55; }
-          90% { opacity: 0.55; }
-          100% { transform: translate3d(26.8vw, 39.2vh, 0) rotate(-118deg); opacity: 0; }
-        }
-        @keyframes radar-plane-cai-dxb {
-          0% { transform: translate3d(56vw, 49.6vh, 0) rotate(82deg); opacity: 0; }
-          12% { opacity: 0.6; }
-          50% { transform: translate3d(60.5vw, 48.2vh, 0) rotate(94deg); opacity: 0.6; }
-          88% { opacity: 0.6; }
-          100% { transform: translate3d(64.8vw, 52.4vh, 0) rotate(106deg); opacity: 0; }
-        }
-      `}</style>
+      {!isPreview && (
+        <style>{`
+          @keyframes fr-cairo-pulse {
+            0% { transform: scale(0.75); opacity: 0.72; }
+            100% { transform: scale(3.4); opacity: 0; }
+          }
+          @keyframes fr-hud-blink {
+            0%, 49% { opacity: 0.85; }
+            50%, 100% { opacity: 0.2; }
+          }
+          ${FLIGHT_KEYFRAMES_CSS}
+        `}</style>
+      )}
 
-      {/* Full-screen faint SVG world grid map */}
+      {/* Full-screen dot-matrix map, routes, cities & tangent-aligned planes in one shared viewBox */}
       <svg
-        viewBox="0 0 1000 500"
+        viewBox={`0 0 ${MAP_W} ${MAP_H}`}
         preserveAspectRatio="xMidYMid slice"
         className="block w-full h-full"
         fill="none"
         aria-hidden="true"
       >
-        {/* Faint latitude & longitude graticule lines */}
+        <defs>
+          {/* Faint route gradient */}
+          <linearGradient id={`${p}-route-grad`} x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop
+              offset="0%"
+              stopColor={isDark ? "#60a5fa" : "#2563eb"}
+              stopOpacity={isDark ? "0.14" : "0.14"}
+            />
+            <stop
+              offset="50%"
+              stopColor={isDark ? "#38bdf8" : "#3b82f6"}
+              stopOpacity={isDark ? "0.34" : "0.26"}
+            />
+            <stop
+              offset="100%"
+              stopColor={isDark ? "#60a5fa" : "#2563eb"}
+              stopOpacity={isDark ? "0.16" : "0.14"}
+            />
+          </linearGradient>
+
+          {/* Short fading trail behind each aircraft (local +y is behind tail) */}
+          <linearGradient id={`${p}-plane-trail`} x1="0" y1="0" x2="0" y2="1">
+            <stop
+              offset="0%"
+              stopColor={isDark ? "#7dd3fc" : "#2563eb"}
+              stopOpacity={isDark ? "0.55" : "0.4"}
+            />
+            <stop offset="100%" stopColor="#38bdf8" stopOpacity="0" />
+          </linearGradient>
+        </defs>
+
+        {/* Subtle latitude / longitude graticule lines */}
         <g
-          className={isDark ? "stroke-blue-400/[0.07]" : "stroke-blue-600/[0.06]"}
-          strokeWidth="0.8"
-          strokeDasharray="3 5"
+          stroke={isDark ? "#60a5fa" : "#2563eb"}
+          strokeOpacity={isDark ? "0.055" : "0.05"}
+          strokeWidth="0.7"
+          strokeDasharray="3 6"
         >
-          <line x1="0" y1="100" x2="1000" y2="100" />
-          <line x1="0" y1="200" x2="1000" y2="200" />
-          <line x1="0" y1="300" x2="1000" y2="300" />
-          <line x1="0" y1="400" x2="1000" y2="400" />
-          <line x1="200" y1="0" x2="200" y2="500" />
-          <line x1="400" y1="0" x2="400" y2="500" />
-          <line x1="600" y1="0" x2="600" y2="500" />
-          <line x1="800" y1="0" x2="800" y2="500" />
+          <line x1="0" y1="135" x2="1200" y2="135" />
+          <line x1="0" y1="270" x2="1200" y2="270" />
+          <line x1="0" y1="405" x2="1200" y2="405" />
+          <line x1="0" y1="540" x2="1200" y2="540" />
+          <line x1="240" y1="0" x2="240" y2="675" />
+          <line x1="480" y1="0" x2="480" y2="675" />
+          <line x1="720" y1="0" x2="720" y2="675" />
+          <line x1="960" y1="0" x2="960" y2="675" />
         </g>
 
-        {/* Simple stylized minimal SVG continent silhouettes (no map images) */}
-        <g
-          className={
-            isDark
-              ? "fill-blue-400/[0.05] stroke-blue-400/[0.1]"
-              : "fill-blue-600/[0.045] stroke-blue-600/[0.09]"
-          }
-          strokeWidth="1"
-        >
-          {/* Americas */}
-          <path d="M135 125 L255 110 L300 170 L275 235 L210 255 L170 215 Z" />
-          <path d="M245 275 L315 285 L345 355 L295 435 L265 405 L250 330 Z" />
-          {/* Europe */}
-          <path d="M445 125 L545 112 L580 155 L545 198 L465 202 L442 165 Z" />
-          {/* Africa */}
-          <path d="M455 225 L575 222 L612 275 L575 395 L520 408 L480 320 L448 265 Z" />
-          {/* Middle East & Asia */}
-          <path d="M585 130 L845 120 L895 190 L845 265 L745 288 L645 285 L590 230 Z" />
-          {/* Australia */}
-          <path d="M785 345 L875 340 L895 398 L815 415 L775 385 Z" />
-        </g>
+        {/* Pre-generated static dot-matrix world map (Europe, Africa & Middle East) */}
+        <image
+          href="/world-dots.svg"
+          x="0"
+          y="0"
+          width={MAP_W}
+          height={MAP_H}
+          opacity={isDark ? 0.24 : 0.22}
+          preserveAspectRatio="none"
+        />
 
-        {/* Curved great-circle flight arcs */}
-        {ARCS.map((arc) => (
+        {/* Curved great-circle dashed routes from Cairo */}
+        {ROUTES.map((route) => (
           <path
-            key={arc.id}
-            d={arc.d}
-            className={
-              isDark ? "stroke-blue-400/25" : "stroke-blue-600/20"
-            }
-            strokeWidth="1.2"
+            key={route.id}
+            d={route.arc.d}
+            stroke={`url(#${p}-route-grad)`}
+            strokeWidth={isPreview ? "2.4" : "1.25"}
             strokeDasharray="4 5"
           />
         ))}
 
-        {/* City dots & Cairo pulse ring */}
+        {/* City Dots & Monospace Airport Code Labels */}
         {CITIES.map((city) => (
           <g key={city.id}>
-            {city.isCairo && !reducedMotion && (
+            {/* Pulsing accent ring on Cairo */}
+            {city.isCairo && (
               <circle
                 cx={city.x}
                 cy={city.y}
-                r="5"
-                className="stroke-accent dark:stroke-blue-400"
-                strokeWidth="1.4"
-                style={{
-                  transformBox: "fill-box",
-                  transformOrigin: "center",
-                  animationName: "cairo-pulse-ring",
-                  animationDuration: "2.8s",
-                  animationTimingFunction: "ease-out",
-                  animationIterationCount: "infinite",
-                  animationPlayState: playState,
-                }}
+                r={isPreview ? "10" : "5.5"}
+                stroke={isDark ? "#60a5fa" : "#2563eb"}
+                strokeWidth={isPreview ? "2.5" : "1.5"}
+                style={
+                  isStatic
+                    ? { opacity: 0.4 }
+                    : {
+                        transformBox: "fill-box",
+                        transformOrigin: "center",
+                        animationName: "fr-cairo-pulse",
+                        animationDuration: "2.8s",
+                        animationTimingFunction: "ease-out",
+                        animationIterationCount: "infinite",
+                        animationPlayState: playState,
+                      }
+                }
               />
             )}
+
+            {/* City dot */}
             <circle
               cx={city.x}
               cy={city.y}
-              r={city.isCairo ? 4 : 2.6}
-              className={
+              r={city.isCairo ? (isPreview ? 7 : 4.6) : isPreview ? 4 : 2.6}
+              fill={
                 city.isCairo
-                  ? "fill-accent dark:fill-blue-400"
+                  ? isDark
+                    ? "#3b82f6"
+                    : "#2563eb"
                   : isDark
-                  ? "fill-blue-300/60"
-                  : "fill-blue-600/45"
+                  ? "#93c5fd"
+                  : "#2563eb"
               }
+              fillOpacity={city.isCairo ? 0.92 : isDark ? 0.62 : 0.48}
             />
+
+            {/* Tiny uppercase monospace code label (hidden in tiny thumbnail preview) */}
+            {!isPreview && (
+              <text
+                x={city.x + city.dx}
+                y={city.y + city.dy}
+                fontSize={city.isCairo ? "10.5" : "9"}
+                fontFamily='"B612 Mono", ui-monospace, monospace'
+                fontWeight={city.isCairo ? "700" : "600"}
+                letterSpacing="0.06em"
+                fill={
+                  city.isCairo
+                    ? isDark
+                      ? "#93c5fd"
+                      : "#1d4ed8"
+                    : isDark
+                    ? "#bfdbfe"
+                    : "#1e40af"
+                }
+                opacity={city.isCairo ? (isDark ? 0.62 : 0.52) : isDark ? 0.4 : 0.36}
+              >
+                {city.code}
+              </text>
+            )}
           </g>
         ))}
 
-        {/* 3 low-opacity floating airport code chips: CAI, DXB, LHR */}
-        {CITIES.filter((c) => c.chip).map((city) => (
-          <g key={`chip-${city.id}`} opacity={isDark ? 0.38 : 0.35}>
-            <rect
-              x={city.x + 8}
-              y={city.y - 12}
-              width="32"
-              height="16"
-              rx="4"
-              className={
-                city.isCairo
-                  ? "fill-accent/20 stroke-accent/60"
-                  : isDark
-                  ? "fill-blue-950/70 stroke-blue-400/40"
-                  : "fill-white/80 stroke-blue-500/35"
-              }
-              strokeWidth="0.9"
-            />
-            <text
-              x={city.x + 24}
-              y={city.y - 1}
-              textAnchor="middle"
-              fontSize="8.5"
-              fontFamily="monospace"
-              fontWeight="600"
-              className={
-                city.isCairo
-                  ? "fill-accent dark:fill-blue-300"
-                  : isDark
-                  ? "fill-blue-200"
-                  : "fill-blue-800"
+        {/* Moving Airplane Icons (20px) with Tangent Rotation & Fading Trails */}
+        {FLIGHTS.map((flight) => {
+          const { arc } = ROUTE_BY_ID[flight.routeId];
+          const staticPt = evalArc(arc, flight.staticT);
+          return (
+            <g
+              key={flight.id}
+              className={!flight.mobile && !isPreview ? "hidden sm:block" : undefined}
+              style={
+                isStatic
+                  ? {
+                      transform: `translate(${staticPt.x}px, ${staticPt.y}px) rotate(${staticPt.deg}deg)`,
+                      opacity: isDark ? 0.72 : 0.58,
+                    }
+                  : {
+                      animationName: `fr-${flight.id}`,
+                      animationDuration: flight.dur,
+                      animationDelay: flight.delay,
+                      animationTimingFunction: "linear",
+                      animationIterationCount: "infinite",
+                      animationPlayState: playState,
+                      willChange: "transform, opacity",
+                    }
               }
             >
-              {city.code}
-            </text>
-          </g>
-        ))}
+              {/* Short fading trail directly behind tail (+y in local plane coords) */}
+              <line
+                x1="0"
+                y1="9"
+                x2="0"
+                y2={isPreview ? "46" : "34"}
+                stroke={`url(#${p}-plane-trail)`}
+                strokeWidth={isPreview ? "3.2" : "1.8"}
+                strokeLinecap="round"
+              />
+              {/* 20px Airplane Icon centered at (0,0) */}
+              <g
+                transform={
+                  isPreview
+                    ? "scale(1.55) translate(-11.5, -12)"
+                    : "scale(0.86) translate(-11.5, -12)"
+                }
+              >
+                <path
+                  d={PLANE_PATH}
+                  fill={isDark ? "#93c5fd" : "#2563eb"}
+                  fillOpacity={isDark ? "0.86" : "0.72"}
+                />
+              </g>
+            </g>
+          );
+        })}
       </svg>
 
-      {/* Tiny plane icons moving smoothly along arcs (transform & opacity only) */}
-      {PLANES.map((plane) => (
+      {/* Subtle Corner HUD (hidden in thumbnail preview) */}
+      {!isPreview && (
         <div
-          key={plane.id}
           aria-hidden="true"
-          className={`${!plane.mobile ? "hidden md:block" : ""} absolute top-0 left-0 w-4 h-4 text-accent dark:text-blue-300 will-change-transform`}
-          style={
-            reducedMotion
-              ? {
-                  left: plane.staticX,
-                  top: plane.staticY,
-                  transform: `rotate(${plane.staticRot}deg)`,
-                  opacity: 0.45,
-                }
-              : {
-                  animationName: plane.anim,
-                  animationDuration: plane.dur,
-                  animationDelay: plane.delay,
-                  animationTimingFunction: "linear",
-                  animationIterationCount: "infinite",
-                  animationPlayState: playState,
-                }
-          }
+          className={`hidden sm:flex fixed bottom-6 right-6 flex-col items-end gap-0.5 select-none pointer-events-none ${
+            isDark ? "text-blue-200/40" : "text-blue-900/35"
+          }`}
+          style={{
+            fontFamily: '"B612 Mono", ui-monospace, monospace',
+          }}
         >
-          <svg viewBox="0 0 24 24" className="w-full h-full block" fill="currentColor">
-            <path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z" />
-          </svg>
+          <div className="flex items-center gap-1.5 text-[10px] tracking-[0.14em] uppercase font-semibold">
+            <span
+              className={`w-1.5 h-1.5 rounded-full ${
+                isDark ? "bg-emerald-400" : "bg-emerald-600"
+              }`}
+              style={
+                isStatic
+                  ? { opacity: 0.7 }
+                  : {
+                      animationName: "fr-hud-blink",
+                      animationDuration: "1.4s",
+                      animationIterationCount: "infinite",
+                      animationPlayState: playState,
+                    }
+              }
+            />
+            <span>LIVE TRACKING</span>
+          </div>
+          <div className="text-[10px] tracking-[0.08em] opacity-85">
+            {HUD_READOUTS[hudIdx]}
+          </div>
         </div>
-      ))}
+      )}
     </div>
   );
 }

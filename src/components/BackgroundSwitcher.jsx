@@ -1,6 +1,9 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, lazy, Suspense } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { useLanguage } from "../context/LanguageContext";
+
+const NightAirportPreview = lazy(() => import("./NightAirportScene"));
+const FlightRadarPreview = lazy(() => import("./FlightRadarScene"));
 
 const GRID_SCENES = [
   "radar",
@@ -78,32 +81,27 @@ function SceneThumbnail({ id }) {
     case "nightAirport":
       return (
         <div className="w-full h-11 rounded-lg bg-gradient-to-b from-[#050b18] via-[#0a1833] to-[#10254a] relative overflow-hidden">
-          <svg viewBox="0 0 80 44" className="w-full h-full" fill="none">
-            <polygon points="34,26 46,26 70,44 10,44" fill="#60a5fa" fillOpacity="0.16" />
-            <circle cx="26" cy="36" r="1.1" fill="#ffffff" fillOpacity="0.85" />
-            <circle cx="33" cy="30" r="1" fill="#ffffff" fillOpacity="0.75" />
-            <circle cx="54" cy="36" r="1.1" fill="#ffffff" fillOpacity="0.85" />
-            <circle cx="47" cy="30" r="1" fill="#ffffff" fillOpacity="0.75" />
-            <circle cx="40" cy="38" r="1.2" fill="#38bdf8" />
-            <circle cx="40" cy="32" r="1.1" fill="#38bdf8" fillOpacity="0.8" />
-            <circle cx="62" cy="34" r="1" fill="#34d399" fillOpacity="0.85" />
-            <circle cx="69" cy="31" r="1" fill="#60a5fa" fillOpacity="0.85" />
-          </svg>
+          <Suspense fallback={null}>
+            <NightAirportPreview
+              isDark={true}
+              reducedMotion={true}
+              isPaused={true}
+              isPreview={true}
+            />
+          </Suspense>
         </div>
       );
     case "flightRadar":
       return (
         <div className="w-full h-11 rounded-lg bg-gradient-to-br from-[#071226] to-[#0f2242] relative overflow-hidden">
-          <svg viewBox="0 0 80 44" className="w-full h-full" fill="none">
-            <line x1="0" y1="22" x2="80" y2="22" stroke="#60a5fa" strokeOpacity="0.16" strokeWidth="0.6" />
-            <line x1="40" y1="0" x2="40" y2="44" stroke="#60a5fa" strokeOpacity="0.16" strokeWidth="0.6" />
-            <path d="M16 28 Q 36 10 50 22" stroke="#60a5fa" strokeOpacity="0.55" strokeWidth="1" strokeDasharray="2 2" />
-            <path d="M50 22 Q 60 15 68 20" stroke="#60a5fa" strokeOpacity="0.55" strokeWidth="1" strokeDasharray="2 2" />
-            <circle cx="50" cy="22" r="4" stroke="#3b82f6" strokeOpacity="0.5" strokeWidth="0.9" />
-            <circle cx="50" cy="22" r="2" fill="#3b82f6" />
-            <circle cx="16" cy="28" r="1.3" fill="#93c5fd" />
-            <circle cx="68" cy="20" r="1.3" fill="#93c5fd" />
-          </svg>
+          <Suspense fallback={null}>
+            <FlightRadarPreview
+              isDark={true}
+              reducedMotion={true}
+              isPaused={true}
+              isPreview={true}
+            />
+          </Suspense>
         </div>
       );
     case "clouds":
