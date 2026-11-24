@@ -9,7 +9,7 @@ import Experience from "./components/sections/Experience";
 import Services from "./components/sections/Services";
 import Projects from "./components/sections/Projects";
 import Achievements from "./components/sections/Achievements";
-import Contact from "./components/sections/Contact";
+import Testimonials from "./components/sections/Testimonials";
 
 export default function App() {
   return (
@@ -26,7 +26,7 @@ export default function App() {
         <Services />
         <Projects />
         <Achievements />
-        <Contact />
+        <Testimonials />
       </main>
     </>
   );

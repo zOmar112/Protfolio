@@ -12,7 +12,7 @@ const ALL_NAV_KEYS = [
   "services",
   "projects",
   "achievements",
-  "contact",
+  "testimonials",
 ];
 
 /* ── Icons ── */
@@ -105,6 +105,7 @@ export default function Navbar() {
     if (key === "experience" && (!t.experience?.items || t.experience.items.length === 0)) return false;
     if (key === "services" && (!t.services?.items || t.services.items.length === 0)) return false;
     if (key === "projects" && (!t.projects?.items || t.projects.items.length === 0)) return false;
+    if (key === "testimonials" && (!t.testimonials?.items || t.testimonials.items.length === 0)) return false;
     return true;
   });
 
@@ -115,7 +116,7 @@ export default function Navbar() {
 
       // If at the very bottom of the document, highlight the last visible section
       if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 60) {
-        setActiveSection(navKeys[navKeys.length - 1] || "contact");
+        setActiveSection(navKeys[navKeys.length - 1] || "testimonials");
         return;
       }
 
@@ -198,7 +199,7 @@ export default function Navbar() {
         <div className="flex items-center gap-2 sm:gap-3">
           {/* "Connect Me" button in accent color with gentle hover lift */}
           <button
-            onClick={() => handleNav("contact")}
+            onClick={() => handleNav("testimonials")}
             className="px-3 sm:px-4 py-1.5 rounded-lg text-xs sm:text-sm font-medium bg-accent hover:opacity-90 text-white transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md active:translate-y-0 cursor-pointer whitespace-nowrap"
           >
             {t.nav.connect}

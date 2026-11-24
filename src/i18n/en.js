@@ -10,7 +10,7 @@ const en = {
     services: "Services",
     projects: "Projects",
     achievements: "Achievements",
-    contact: "Contact",
+    testimonials: "Testimonials",
     connect: "Connect Me",
   },
   home: {
@@ -498,35 +498,50 @@ const en = {
       },
     ],
   },
-  contact: {
-    heading: "Get in Touch",
-    subheading:
-      "Looking for a machine learning model, a data analysis collaboration, or a clean web application? Let's connect.",
-    emailLabel: "Email",
-    email: "",
-    whatsappLabel: "WhatsApp",
-    whatsapp: "",
-    socials: {
-      github: "https://github.com/zOmar112",
-      linkedin: "https://www.linkedin.com/in/omarsolimn",
-    },
-    copy: "Copy",
-    copied: "Copied!",
-    form: {
-      name: "Name",
-      namePlaceholder: "Your name",
-      email: "Email",
-      emailPlaceholder: "you@example.com",
-      subject: "Subject",
-      subjectPlaceholder: "Project inquiry or opportunity",
-      message: "Message",
-      messagePlaceholder: "How can I help you?",
-      submit: "Send Message",
-    },
+  testimonials: {
+    title: "Testimonials & Feedback",
+    subtitle: "What mentors, teammates, and clients say about working with me.",
+    items: [
+      {
+        id: "testimonial-1",
+        name: "Dr. Ahmed Hassan",
+        role: "Machine Learning Instructor & Academic Mentor",
+        avatar: "",
+        content:
+          "Omar demonstrated an outstanding understanding of end-to-end data pipelines and classification modeling. His adult income prediction project achieved a 98% score thanks to rigorous data preprocessing, feature engineering, and thorough ROC-AUC evaluation.",
+        rating: 5,
+        project: "Adult Income Prediction Pipeline",
+      },
+      {
+        id: "testimonial-2",
+        name: "Kareem Mostafa",
+        role: "Team Lead · Vortex-Gen Hackathon",
+        avatar: "",
+        content:
+          "Working alongside Omar was a great experience. He rapidly implemented responsive simulation controls and integrated them with our aerodynamics engine under hackathon pressure, helping our team secure 3rd place.",
+        rating: 5,
+        project: "Vortex-Gen Aviation Simulator",
+      },
+      {
+        id: "testimonial-3",
+        name: "Sarah Al-Ghamdi",
+        role: "Client & Brand Owner · Ber Store",
+        avatar: "",
+        content:
+          "Omar delivered an exceptional Arabic-first online store with an intuitive admin dashboard and seamless WhatsApp ordering. His communication was prompt, calm, and highly professional throughout the project.",
+        rating: 5,
+        project: "Ber Store E-Commerce",
+      },
+    ],
   },
   footer: {
     intro:
       "Omar Ibrahim — Aviation Computers & Information student in Zagazig. Turning raw data into clear predictions through machine learning models built and tested on real datasets.",
+    email: "imm5201978@gmail.com",
+    whatsapp: "+201028570417",
+    whatsappDisplay: "01028570417",
+    copy: "Copy",
+    copied: "Copied!",
   },
   sections: {
     home: "Home",
@@ -537,7 +552,7 @@ const en = {
     services: "Services",
     projects: "Projects",
     achievements: "Achievements",
-    contact: "Contact",
+    testimonials: "Testimonials",
   },
 };
 
