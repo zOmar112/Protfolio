@@ -16,7 +16,15 @@ import Achievements from "./components/sections/Achievements";
 import Testimonials from "./components/sections/Testimonials";
 
 const BG_SCENE_KEY = "oi_bg_scene";
-const VALID_SCENES = new Set(["radar", "tower", "nightSky"]);
+const VALID_SCENES = new Set([
+  "radar",
+  "tower",
+  "nightSky",
+  "nightAirport",
+  "flightRadar",
+  "clouds",
+  "auto",
+]);
 
 function getInitialScene() {
   if (typeof window === "undefined") return "radar";

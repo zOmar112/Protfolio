@@ -1,9 +1,15 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, lazy, Suspense } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTheme } from "../context/ThemeContext";
-import RadarScene from "./RadarScene";
-import ControlTowerScene from "./ControlTowerScene";
-import NightSkyScene from "./NightSkyScene";
+
+const SCENE_COMPONENTS = {
+  radar: lazy(() => import("./RadarScene")),
+  tower: lazy(() => import("./ControlTowerScene")),
+  nightSky: lazy(() => import("./NightSkyScene")),
+  nightAirport: lazy(() => import("./NightAirportScene")),
+  flightRadar: lazy(() => import("./FlightRadarScene")),
+  clouds: lazy(() => import("./CloudsScene")),
+};
 
 export default function AviationBackground({ scene = "radar" }) {
   const { theme } = useTheme();
@@ -32,6 +38,11 @@ export default function AviationBackground({ scene = "radar" }) {
   const isDark = theme === "dark";
   const isPaused = reducedMotion || isHidden;
 
+  // "auto" picks Clouds in Light mode and Night Airport in Dark mode
+  const resolvedScene =
+    scene === "auto" ? (isDark ? "nightAirport" : "clouds") : scene;
+  const ActiveScene = SCENE_COMPONENTS[resolvedScene] || SCENE_COMPONENTS.radar;
+
   return (
     <div
       dir="ltr"
@@ -48,35 +59,23 @@ export default function AviationBackground({ scene = "radar" }) {
       {/* Soft Sky / Night Background Gradient (shared across all scenes) */}
       <div className="absolute inset-0 bg-gradient-to-b from-[#f0f7ff] via-[#f8fbff] to-[#e4f1fd] dark:from-[#050c18] dark:via-[#091428] dark:to-[#030712] transition-colors duration-500" />
 
-      {/* Active Scene with 0.4s cross-fade */}
+      {/* Render only the active lazy-loaded scene with 0.4s cross-fade */}
       <AnimatePresence initial={false}>
         <motion.div
-          key={scene}
+          key={resolvedScene}
           initial={reducedMotion ? { opacity: 1 } : { opacity: 0 }}
           animate={{ opacity: 1 }}
-          exit={reducedMotion ? { opacity: 0 } : { opacity: 0 }}
+          exit={{ opacity: 0 }}
           transition={{ duration: reducedMotion ? 0 : 0.4, ease: "easeInOut" }}
           className="absolute inset-0 overflow-hidden"
         >
-          {scene === "tower" ? (
-            <ControlTowerScene
+          <Suspense fallback={null}>
+            <ActiveScene
               isDark={isDark}
               reducedMotion={reducedMotion}
               isPaused={isPaused}
             />
-          ) : scene === "nightSky" ? (
-            <NightSkyScene
-              isDark={isDark}
-              reducedMotion={reducedMotion}
-              isPaused={isPaused}
-            />
-          ) : (
-            <RadarScene
-              isDark={isDark}
-              reducedMotion={reducedMotion}
-              isPaused={isPaused}
-            />
-          )}
+          </Suspense>
         </motion.div>
       </AnimatePresence>
     </div>

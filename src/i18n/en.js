@@ -532,10 +532,15 @@ const en = {
   backgroundSwitcher: {
     label: "Change background scene",
     title: "Background Scene",
+    autoHint: "Clouds (Light) · Night Airport (Dark)",
     scenes: {
       radar: "Radar",
       tower: "Control Tower",
       nightSky: "Night Sky",
+      nightAirport: "Night Airport",
+      flightRadar: "Flight Radar",
+      clouds: "Clouds",
+      auto: "Auto",
     },
   },
   sections: {

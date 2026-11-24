@@ -530,10 +530,15 @@ const ar = {
   backgroundSwitcher: {
     label: "تغيير خلفية المشهد",
     title: "خلفية المشهد",
+    autoHint: "السحب (فاتح) · مطار ليلي (داكن)",
     scenes: {
       radar: "الرادار",
       tower: "برج المراقبة",
       nightSky: "سماء الليل",
+      nightAirport: "مطار ليلي",
+      flightRadar: "رادار الرحلات",
+      clouds: "السحب",
+      auto: "تلقائي",
     },
   },
   sections: {
