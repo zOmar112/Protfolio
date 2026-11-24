@@ -105,7 +105,6 @@ export default function Navbar() {
     if (key === "experience" && (!t.experience?.items || t.experience.items.length === 0)) return false;
     if (key === "services" && (!t.services?.items || t.services.items.length === 0)) return false;
     if (key === "projects" && (!t.projects?.items || t.projects.items.length === 0)) return false;
-    if (key === "testimonials" && (!t.testimonials?.items || t.testimonials.items.length === 0)) return false;
     return true;
   });
 
