@@ -1,5 +1,7 @@
+import { useState, useEffect } from "react";
 import PlaneCursor from "./components/PlaneCursor";
 import AviationBackground from "./components/AviationBackground";
+import BackgroundSwitcher from "./components/BackgroundSwitcher";
 import IntroLoader from "./components/IntroLoader";
 import BackToTop from "./components/BackToTop";
 import Navbar from "./components/Navbar";
@@ -13,11 +15,34 @@ import Projects from "./components/sections/Projects";
 import Achievements from "./components/sections/Achievements";
 import Testimonials from "./components/sections/Testimonials";
 
+const BG_SCENE_KEY = "oi_bg_scene";
+const VALID_SCENES = new Set(["radar", "tower", "nightSky"]);
+
+function getInitialScene() {
+  if (typeof window === "undefined") return "radar";
+  try {
+    const saved = window.localStorage.getItem(BG_SCENE_KEY);
+    return saved && VALID_SCENES.has(saved) ? saved : "radar";
+  } catch {
+    return "radar";
+  }
+}
+
 export default function App() {
+  const [bgScene, setBgScene] = useState(getInitialScene);
+
+  useEffect(() => {
+    try {
+      window.localStorage.setItem(BG_SCENE_KEY, bgScene);
+    } catch {
+      // Ignore storage errors (private mode / blocked storage)
+    }
+  }, [bgScene]);
+
   return (
     <>
       <PlaneCursor />
-      <AviationBackground />
+      <AviationBackground scene={bgScene} />
       <Navbar />
       <main className="pt-16 relative z-10">
         <Home />
@@ -30,6 +55,7 @@ export default function App() {
         <Achievements />
         <Testimonials />
       </main>
+      <BackgroundSwitcher scene={bgScene} onChange={setBgScene} />
       <BackToTop />
       <IntroLoader />
     </>

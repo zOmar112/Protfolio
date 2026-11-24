@@ -527,6 +527,15 @@ const ar = {
     copy: "نسخ",
     copied: "تم النسخ!",
   },
+  backgroundSwitcher: {
+    label: "تغيير خلفية المشهد",
+    title: "خلفية المشهد",
+    scenes: {
+      radar: "الرادار",
+      tower: "برج المراقبة",
+      nightSky: "سماء الليل",
+    },
+  },
   sections: {
     home: "الرئيسية",
     about: "عني",

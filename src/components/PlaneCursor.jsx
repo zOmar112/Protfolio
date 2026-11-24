@@ -84,6 +84,11 @@ export default function PlaneCursor() {
       }
 
       const target = e.target instanceof Element ? e.target : null;
+      if (target && target.closest("[data-hide-plane-cursor]")) {
+        setContainerVisible(false);
+        return;
+      }
+
       isHovering.current = Boolean(
         target &&
           target.closest("a, button, [role='button'], .cursor-pointer, label")

@@ -529,6 +529,15 @@ const en = {
     copy: "Copy",
     copied: "Copied!",
   },
+  backgroundSwitcher: {
+    label: "Change background scene",
+    title: "Background Scene",
+    scenes: {
+      radar: "Radar",
+      tower: "Control Tower",
+      nightSky: "Night Sky",
+    },
+  },
   sections: {
     home: "Home",
     about: "About Me",
