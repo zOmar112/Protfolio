@@ -65,61 +65,271 @@ const en = {
     ],
   },
   skills: {
-    items: [
+    connectedToolsLabel: "CONNECTED TOOLS & STACK",
+    connectedConceptsLabel: "CONNECTED CAPABILITIES",
+    leftGroupLabel: "Core Capabilities",
+    rightGroupLabel: "Tools & Stack",
+    hintText: "Hover or click any node to inspect connections",
+    categories: [
       {
         id: "ml-data",
+        tab: "ML TECHNIQUES",
         title: "Machine Learning & Data",
         description:
-          "Building end-to-end ML pipelines, exploratory analysis, and data modeling on real datasets.",
-        tags: [
-          "Python",
-          "Pandas",
-          "NumPy",
-          "Scikit-Learn",
-          "Seaborn",
-          "Jupyter",
-          "Feature Engineering",
+          "Building end-to-end ML pipelines, exploratory data analysis, and evaluated classification models on real-world datasets.",
+        archLabel: "PYTHON-CORE NEURAL ARCHITECTURE",
+        core: {
+          id: "python",
+          label: "Python",
+          statusTitle: "Python Core",
+          connected: [
+            "Python",
+            "Pandas",
+            "NumPy",
+            "Scikit-Learn",
+            "Seaborn",
+            "Jupyter Notebook",
+          ],
+        },
+        leftNodes: [
+          {
+            id: "eda",
+            label: "Exploratory Data Analysis (EDA)",
+            links: ["jupyter", "pandas", "seaborn"],
+          },
+          {
+            id: "prep",
+            label: "Data Preprocessing & Cleaning",
+            links: ["jupyter", "pandas", "sklearn"],
+          },
+          {
+            id: "fe",
+            label: "Feature Engineering",
+            links: ["pandas", "sklearn", "pipelines"],
+          },
+          {
+            id: "sup",
+            label: "Supervised Classification",
+            links: ["sklearn", "pipelines"],
+          },
+          {
+            id: "unsup",
+            label: "Unsupervised Learning",
+            links: ["sklearn", "seaborn"],
+          },
+          {
+            id: "eval",
+            label: "Model Evaluation (ROC-AUC · F1)",
+            links: ["sklearn", "seaborn", "pipelines"],
+          },
+        ],
+        rightNodes: [
+          { id: "jupyter", label: "Jupyter Notebook" },
+          { id: "pandas", label: "Pandas & NumPy" },
+          { id: "seaborn", label: "Seaborn Visualization" },
+          { id: "sklearn", label: "Scikit-Learn" },
+          { id: "pipelines", label: "End-to-End ML Pipelines" },
         ],
       },
       {
         id: "web-dev",
+        tab: "WEB DEVELOPMENT",
         title: "Web Development",
         description:
-          "Developing responsive, modern user interfaces with clean component architectures and motion.",
-        tags: ["React", "Vite", "TypeScript", "TailwindCSS", "Framer Motion"],
-      },
-      {
-        id: "backend-deploy",
-        title: "Deployment & Backend",
-        description:
-          "Cloud databases, authentication management, and continuous frontend deployment.",
-        tags: ["Supabase", "Vercel"],
-      },
-      {
-        id: "ai-dev",
-        title: "AI-Assisted Development",
-        description:
-          "Accelerating software workflows using AI developer tooling and language model APIs.",
-        tags: ["AI Coding Tools", "Claude API"],
-      },
-      {
-        id: "soft-skills",
-        title: "Soft Skills",
-        description:
-          "Core interpersonal strengths that support calm problem-solving and rapid adaptation.",
-        tags: [
-          "Calm Under Pressure",
-          "Fast Learner",
-          "Problem Solving",
-          "Analytical Thinking",
+          "Developing responsive, Arabic-first and interactive interfaces with clean component architectures and smooth motion.",
+        archLabel: "REACT FRONTEND ARCHITECTURE",
+        core: {
+          id: "react",
+          label: "React",
+          statusTitle: "React Core",
+          connected: [
+            "React",
+            "TypeScript",
+            "Vite",
+            "TailwindCSS",
+            "Framer Motion",
+          ],
+        },
+        leftNodes: [
+          {
+            id: "comp",
+            label: "Component Architecture",
+            links: ["ts", "vite"],
+          },
+          {
+            id: "rtl",
+            label: "Responsive & RTL Design",
+            links: ["tailwind", "framer"],
+          },
+          {
+            id: "sim",
+            label: "Interactive Simulation UI",
+            links: ["ts", "vite", "tailwind"],
+          },
+          {
+            id: "motion",
+            label: "Smooth UI Motion",
+            links: ["framer", "tailwind"],
+          },
+          {
+            id: "store",
+            label: "E-Commerce & Admin Flows",
+            links: ["ts", "tailwind", "vite"],
+          },
+        ],
+        rightNodes: [
+          { id: "ts", label: "TypeScript" },
+          { id: "vite", label: "Vite" },
+          { id: "tailwind", label: "TailwindCSS" },
+          { id: "framer", label: "Framer Motion" },
         ],
       },
       {
-        id: "learning",
+        id: "cloud-ai",
+        tab: "TOOLS & CLOUD",
+        title: "Deployment, Backend & AI Workflow",
+        description:
+          "Cloud databases, authentication, continuous frontend deployment, and AI-accelerated software workflows.",
+        archLabel: "CLOUD & AI WORKFLOW SYSTEM",
+        core: {
+          id: "cloud",
+          label: "Cloud & AI",
+          statusTitle: "Cloud & AI Core",
+          connected: [
+            "Supabase",
+            "Vercel",
+            "AI Coding Tools",
+            "Claude API",
+          ],
+        },
+        leftNodes: [
+          {
+            id: "db",
+            label: "Cloud Database & Storage",
+            links: ["supabase"],
+          },
+          {
+            id: "auth",
+            label: "Auth & Inventory Control",
+            links: ["supabase", "vercel"],
+          },
+          {
+            id: "deploy",
+            label: "Continuous Deployment",
+            links: ["vercel", "supabase"],
+          },
+          {
+            id: "aidev",
+            label: "AI-Assisted Development",
+            links: ["aitools", "claude"],
+          },
+          {
+            id: "llm",
+            label: "LLM API Integration",
+            links: ["claude", "aitools"],
+          },
+        ],
+        rightNodes: [
+          { id: "supabase", label: "Supabase" },
+          { id: "vercel", label: "Vercel" },
+          { id: "aitools", label: "AI Coding Tools" },
+          { id: "claude", label: "Claude API" },
+        ],
+      },
+      {
+        id: "soft-skills",
+        tab: "SOFT SKILLS",
+        title: "Soft Skills",
+        description:
+          "Core interpersonal strengths that support calm problem-solving, analytical clarity, and rapid adaptation.",
+        archLabel: "ANALYTICAL EXECUTION ARCHITECTURE",
+        core: {
+          id: "solving",
+          label: "Problem Solving",
+          statusTitle: "Problem Solving Core",
+          connected: [
+            "Calm Under Pressure",
+            "Analytical Thinking",
+            "Fast Learner",
+            "Hackathon Teamwork",
+          ],
+        },
+        leftNodes: [
+          {
+            id: "calm",
+            label: "Calm Under Pressure",
+            links: ["hackathon", "delivery"],
+          },
+          {
+            id: "analytical",
+            label: "Analytical Thinking",
+            links: ["realdata", "docs"],
+          },
+          {
+            id: "fast",
+            label: "Fast Learner",
+            links: ["prototyping", "delivery"],
+          },
+          {
+            id: "teamwork",
+            label: "Team Collaboration",
+            links: ["hackathon", "docs"],
+          },
+        ],
+        rightNodes: [
+          { id: "realdata", label: "Real-Dataset Investigation" },
+          { id: "prototyping", label: "Rapid Prototyping" },
+          { id: "hackathon", label: "Hackathon Execution" },
+          { id: "docs", label: "Clear Result Documentation" },
+          { id: "delivery", label: "Self-Driven Delivery" },
+        ],
+      },
+      {
+        id: "exploring",
+        tab: "CURRENTLY EXPLORING",
         title: "Currently Learning",
         description:
-          "Expanding analytical depth with a strong focus on sports and performance metrics.",
-        tags: ["Data Analysis", "Football Analytics"],
+          "Expanding analytical depth with a strong applied focus on football performance metrics and aerodynamic simulation.",
+        archLabel: "ACTIVE EXPLORATION RADAR",
+        core: {
+          id: "analysis",
+          label: "Data Analysis",
+          statusTitle: "Exploration Core",
+          connected: [
+            "Data Analysis",
+            "Football Analytics",
+            "Match & Player Metrics",
+            "Panel Method Solver",
+          ],
+        },
+        leftNodes: [
+          {
+            id: "football",
+            label: "Football Analytics",
+            links: ["sportsdata", "statviz", "pypandas"],
+          },
+          {
+            id: "match",
+            label: "Match & Tactical Analysis",
+            links: ["sportsdata", "statviz"],
+          },
+          {
+            id: "player",
+            label: "Player Performance Metrics",
+            links: ["pypandas", "statviz"],
+          },
+          {
+            id: "panel",
+            label: "Airfoil Panel Method",
+            links: ["aerosim", "pypandas"],
+          },
+        ],
+        rightNodes: [
+          { id: "pypandas", label: "Python & Pandas" },
+          { id: "sportsdata", label: "Match & Event Datasets" },
+          { id: "statviz", label: "Performance Visualization" },
+          { id: "aerosim", label: "Aerodynamic Simulation" },
+        ],
       },
     ],
   },

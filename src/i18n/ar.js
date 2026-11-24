@@ -65,61 +65,271 @@ const ar = {
     ],
   },
   skills: {
-    items: [
+    connectedToolsLabel: "الأدوات والمكتبات المرتبطة",
+    connectedConceptsLabel: "المهارات والمحاور المرتبطة",
+    leftGroupLabel: "المحاور والقدرات الأساسية",
+    rightGroupLabel: "الأدوات والتقنيات",
+    hintText: "مرّر أو اضغط على أي عنصر لاستعراض الترابطات",
+    categories: [
       {
         id: "ml-data",
+        tab: "تعلم الآلة والبيانات",
         title: "تعلم الآلة والبيانات",
         description:
-          "بناء مسارات تعلم آلة متكاملة، والتحليل الاستكشافي للبيانات، ونمذجتها على مجموعات بيانات واقعية.",
-        tags: [
-          "Python",
-          "Pandas",
-          "NumPy",
-          "Scikit-Learn",
-          "Seaborn",
-          "Jupyter",
-          "Feature Engineering",
+          "بناء مسارات تعلم آلة متكاملة، والتحليل الاستكشافي للبيانات، ونماذج تصنيف مُقيَّمة على مجموعات بيانات حقيقية.",
+        archLabel: "بنية تعلم الآلة — محور PYTHON",
+        core: {
+          id: "python",
+          label: "Python",
+          statusTitle: "محور Python الأساسي",
+          connected: [
+            "Python",
+            "Pandas",
+            "NumPy",
+            "Scikit-Learn",
+            "Seaborn",
+            "Jupyter Notebook",
+          ],
+        },
+        leftNodes: [
+          {
+            id: "eda",
+            label: "التحليل الاستكشافي (EDA)",
+            links: ["jupyter", "pandas", "seaborn"],
+          },
+          {
+            id: "prep",
+            label: "تنظيف ومعالجة البيانات",
+            links: ["jupyter", "pandas", "sklearn"],
+          },
+          {
+            id: "fe",
+            label: "هندسة الخصائص (Feature Engineering)",
+            links: ["pandas", "sklearn", "pipelines"],
+          },
+          {
+            id: "sup",
+            label: "التعلّم الموجه والتصنيف",
+            links: ["sklearn", "pipelines"],
+          },
+          {
+            id: "unsup",
+            label: "التعلّم غير الموجه",
+            links: ["sklearn", "seaborn"],
+          },
+          {
+            id: "eval",
+            label: "تقييم النماذج (ROC-AUC · F1)",
+            links: ["sklearn", "seaborn", "pipelines"],
+          },
+        ],
+        rightNodes: [
+          { id: "jupyter", label: "Jupyter Notebook" },
+          { id: "pandas", label: "Pandas & NumPy" },
+          { id: "seaborn", label: "Seaborn لتصوّر البيانات" },
+          { id: "sklearn", label: "Scikit-Learn" },
+          { id: "pipelines", label: "مسارات ML متكاملة" },
         ],
       },
       {
         id: "web-dev",
+        tab: "تطوير الويب",
         title: "تطوير الويب",
         description:
-          "تطوير واجهات مستخدم تفاعلية وحديثة وسريعة الاستجابة بتصميم أنيق وحركات سلسة.",
-        tags: ["React", "Vite", "TypeScript", "TailwindCSS", "Framer Motion"],
-      },
-      {
-        id: "backend-deploy",
-        title: "النشر والواجهات الخلفية",
-        description:
-          "إدارة قواعد البيانات السحابية والمصادقة، وضمان النشر الآلي المستمر للتطبيقات.",
-        tags: ["Supabase", "Vercel"],
-      },
-      {
-        id: "ai-dev",
-        title: "التطوير بمساعدة الذكاء الاصطناعي",
-        description:
-          "تسريع وتطوير البرمجيات باستخدام أدوات البرمجة الذكية وواجهات نماذج اللغة البرمجية.",
-        tags: ["AI Coding Tools", "Claude API"],
-      },
-      {
-        id: "soft-skills",
-        title: "المهارات الشخصية",
-        description:
-          "سمات شخصية تعزز العمل الجماعي الهادئ وسرعة التكيف والتنفيذ الفعال.",
-        tags: [
-          "الهدوء تحت الضغط",
-          "سرعة التعلّم",
-          "حل المشكلات",
-          "التفكير التحليلي",
+          "تطوير واجهات مستخدم تفاعلية وحديثة وسريعة الاستجابة وداعمة للعربية بهندسة مكونات منظمة وحركات سلسة.",
+        archLabel: "بنية الواجهات الأمامية — محور REACT",
+        core: {
+          id: "react",
+          label: "React",
+          statusTitle: "محور React الأساسي",
+          connected: [
+            "React",
+            "TypeScript",
+            "Vite",
+            "TailwindCSS",
+            "Framer Motion",
+          ],
+        },
+        leftNodes: [
+          {
+            id: "comp",
+            label: "هندسة المكونات",
+            links: ["ts", "vite"],
+          },
+          {
+            id: "rtl",
+            label: "تصميم متجاوب ودعم RTL",
+            links: ["tailwind", "framer"],
+          },
+          {
+            id: "sim",
+            label: "واجهات محاكاة تفاعلية",
+            links: ["ts", "vite", "tailwind"],
+          },
+          {
+            id: "motion",
+            label: "حركات وانتقالات سلسة",
+            links: ["framer", "tailwind"],
+          },
+          {
+            id: "store",
+            label: "المتاجر ولوحات التحكم",
+            links: ["ts", "tailwind", "vite"],
+          },
+        ],
+        rightNodes: [
+          { id: "ts", label: "TypeScript" },
+          { id: "vite", label: "Vite" },
+          { id: "tailwind", label: "TailwindCSS" },
+          { id: "framer", label: "Framer Motion" },
         ],
       },
       {
-        id: "learning",
-        title: "أتعلمه حالياً",
+        id: "cloud-ai",
+        tab: "السحابة وأدوات AI",
+        title: "النشر والواجهات الخلفية وأدوات AI",
         description:
-          "تعميق المهارات التحليلية مع تركيز تطبيقي على تحليلات وأداء كرة القدم.",
-        tags: ["Data Analysis", "Football Analytics"],
+          "إدارة قواعد البيانات السحابية والمصادقة، والنشر الآلي المستمر، وتسريع تطوير البرمجيات بالذكاء الاصطناعي.",
+        archLabel: "منظومة السحابة والتطوير المعزز بـ AI",
+        core: {
+          id: "cloud",
+          label: "Cloud & AI",
+          statusTitle: "محور السحابة و AI",
+          connected: [
+            "Supabase",
+            "Vercel",
+            "AI Coding Tools",
+            "Claude API",
+          ],
+        },
+        leftNodes: [
+          {
+            id: "db",
+            label: "قواعد البيانات وتخزين الوسائط",
+            links: ["supabase"],
+          },
+          {
+            id: "auth",
+            label: "المصادقة وإدارة المخزون",
+            links: ["supabase", "vercel"],
+          },
+          {
+            id: "deploy",
+            label: "النشر السحابي المستمر",
+            links: ["vercel", "supabase"],
+          },
+          {
+            id: "aidev",
+            label: "البرمجة بمساعدة الذكاء الاصطناعي",
+            links: ["aitools", "claude"],
+          },
+          {
+            id: "llm",
+            label: "دمج واجهات نماذج اللغة",
+            links: ["claude", "aitools"],
+          },
+        ],
+        rightNodes: [
+          { id: "supabase", label: "Supabase" },
+          { id: "vercel", label: "Vercel" },
+          { id: "aitools", label: "AI Coding Tools" },
+          { id: "claude", label: "Claude API" },
+        ],
+      },
+      {
+        id: "soft-skills",
+        tab: "المهارات الشخصية",
+        title: "المهارات الشخصية",
+        description:
+          "سمات شخصية تعزز حل المشكلات بهدوء، والتفكير التحليلي المنظم، وسرعة التعلّم والتكيف.",
+        archLabel: "منظومة التفكير التحليلي والتنفيذ",
+        core: {
+          id: "solving",
+          label: "حل المشكلات",
+          statusTitle: "محور حل المشكلات",
+          connected: [
+            "الهدوء تحت الضغط",
+            "التفكير التحليلي",
+            "سرعة التعلّم",
+            "العمل الجماعي",
+          ],
+        },
+        leftNodes: [
+          {
+            id: "calm",
+            label: "الهدوء تحت الضغط",
+            links: ["hackathon", "delivery"],
+          },
+          {
+            id: "analytical",
+            label: "التفكير التحليلي",
+            links: ["realdata", "docs"],
+          },
+          {
+            id: "fast",
+            label: "سرعة التعلّم",
+            links: ["prototyping", "delivery"],
+          },
+          {
+            id: "teamwork",
+            label: "العمل الجماعي الفعّال",
+            links: ["hackathon", "docs"],
+          },
+        ],
+        rightNodes: [
+          { id: "realdata", label: "استكشاف البيانات الواقعية" },
+          { id: "prototyping", label: "بناء النماذج الأولية بسرعة" },
+          { id: "hackathon", label: "الإنجاز في بيئة الهاكاثون" },
+          { id: "docs", label: "توثيق النتائج بوضوح" },
+          { id: "delivery", label: "التنفيذ الذاتي المتكامل" },
+        ],
+      },
+      {
+        id: "exploring",
+        tab: "أتعلمه حالياً",
+        title: "أتعلمه وأستكشفه حالياً",
+        description:
+          "تعميق المهارات التحليلية مع تركيز تطبيقي على تحليلات الأداء والمباريات في كرة القدم ومحاكاة الطيران.",
+        archLabel: "رادار الاستكشاف والتعلّم الحالي",
+        core: {
+          id: "analysis",
+          label: "تحليل البيانات",
+          statusTitle: "محور الاستكشاف الحالي",
+          connected: [
+            "Data Analysis",
+            "Football Analytics",
+            "تحليل المباريات واللاعبين",
+            "Panel Method Solver",
+          ],
+        },
+        leftNodes: [
+          {
+            id: "football",
+            label: "تحليلات كرة القدم (Football Analytics)",
+            links: ["sportsdata", "statviz", "pypandas"],
+          },
+          {
+            id: "match",
+            label: "تحليل المباريات والتكتيك",
+            links: ["sportsdata", "statviz"],
+          },
+          {
+            id: "player",
+            label: "مؤشرات أداء اللاعبين",
+            links: ["pypandas", "statviz"],
+          },
+          {
+            id: "panel",
+            label: "محاكاة الأجنحة (Panel Method)",
+            links: ["aerosim", "pypandas"],
+          },
+        ],
+        rightNodes: [
+          { id: "pypandas", label: "Python & Pandas" },
+          { id: "sportsdata", label: "بيانات المباريات والأحداث" },
+          { id: "statviz", label: "تصوّر مؤشرات الأداء" },
+          { id: "aerosim", label: "النمذجة الهوائية للطيران" },
+        ],
       },
     ],
   },
