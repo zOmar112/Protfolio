@@ -1,11 +1,61 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import { useReducedMotion } from "framer-motion";
 import { useLanguage } from "../../context/LanguageContext";
 import Section from "../Section";
 
 export default function Home() {
   const { t } = useLanguage();
+  const shouldReduceMotion = useReducedMotion();
   const [hasCv, setHasCv] = useState(false);
   const [imgError, setImgError] = useState(false);
+
+  const roleText = t.home.role;
+  const hasTypedOnceRef = useRef(false);
+  const [typedCount, setTypedCount] = useState(() =>
+    typeof window !== "undefined" &&
+    window.matchMedia?.("(prefers-reduced-motion: reduce)").matches
+      ? roleText.length
+      : 0
+  );
+  const [isTyping, setIsTyping] = useState(() =>
+    !(
+      typeof window !== "undefined" &&
+      window.matchMedia?.("(prefers-reduced-motion: reduce)").matches
+    )
+  );
+
+  useEffect(() => {
+    if (shouldReduceMotion || hasTypedOnceRef.current) {
+      hasTypedOnceRef.current = true;
+      setTypedCount(roleText.length);
+      setIsTyping(false);
+      return;
+    }
+
+    let current = 0;
+    let hideCursorTimeout;
+    const interval = window.setInterval(() => {
+      current += 1;
+      setTypedCount(current);
+      if (current >= roleText.length) {
+        window.clearInterval(interval);
+        hasTypedOnceRef.current = true;
+        hideCursorTimeout = window.setTimeout(() => {
+          setIsTyping(false);
+        }, 250);
+      }
+    }, 40);
+
+    return () => {
+      window.clearInterval(interval);
+      if (hideCursorTimeout) window.clearTimeout(hideCursorTimeout);
+    };
+  }, [roleText, shouldReduceMotion]);
+
+  const displayedRole =
+    shouldReduceMotion || hasTypedOnceRef.current
+      ? roleText
+      : roleText.slice(0, typedCount);
 
   useEffect(() => {
     fetch("/cv.pdf", { method: "HEAD" })
@@ -69,8 +119,22 @@ export default function Home() {
           </h1>
 
           {/* 3. "Data & Machine Learning Student" */}
-          <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-700 dark:text-gray-300 mb-6">
-            {t.home.role}
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-700 dark:text-gray-300 mb-6 grid">
+            <span
+              aria-hidden="true"
+              className="invisible col-start-1 row-start-1 select-none pointer-events-none"
+            >
+              {roleText}
+            </span>
+            <span className="col-start-1 row-start-1">
+              {displayedRole}
+              {isTyping && !shouldReduceMotion && (
+                <span
+                  aria-hidden="true"
+                  className="inline-block w-[2px] h-[0.95em] bg-accent align-[-0.1em] ms-0.5 animate-pulse"
+                />
+              )}
+            </span>
           </h2>
 
           {/* 4. USP */}

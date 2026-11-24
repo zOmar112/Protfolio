@@ -153,7 +153,7 @@ export default function Projects() {
             tabIndex={0}
             role="button"
             aria-haspopup="dialog"
-            className="h-full flex flex-col rounded-2xl border border-gray-200 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-900/50 overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-gray-300 dark:hover:border-gray-700 cursor-pointer group focus:outline-none focus:ring-2 focus:ring-accent"
+            className="h-full flex flex-col rounded-2xl border border-gray-200 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-900/50 overflow-hidden transition-all duration-300 hover:-translate-y-[6px] hover:border-accent/60 dark:hover:border-accent/70 hover:shadow-[0_12px_28px_-6px_rgba(37,99,235,0.18),0_0_0_1px_rgba(37,99,235,0.2)] dark:hover:shadow-[0_12px_30px_-6px_rgba(59,130,246,0.25),0_0_0_1px_rgba(59,130,246,0.28)] motion-reduce:transition-none motion-reduce:hover:translate-y-0 cursor-pointer group focus:outline-none focus:ring-2 focus:ring-accent"
           >
             {/* Cover image or placeholder */}
             <div className="w-full h-48 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-900 flex items-center justify-center relative overflow-hidden flex-shrink-0">
@@ -161,7 +161,7 @@ export default function Projects() {
                 <img
                   src={project.cover}
                   alt={project.title}
-                  className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                  className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105 motion-reduce:transition-none motion-reduce:group-hover:scale-100"
                 />
               ) : (
                 <span className="text-2xl sm:text-3xl font-bold text-gray-300 dark:text-gray-700 select-none text-center px-4">

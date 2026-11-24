@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useScroll, useSpring, useReducedMotion } from "framer-motion";
 import { useTheme } from "../context/ThemeContext";
 import { useLanguage } from "../context/LanguageContext";
 
@@ -98,6 +98,14 @@ export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
   const [isScrolled, setIsScrolled] = useState(false);
+  const shouldReduceMotion = useReducedMotion();
+
+  const { scrollYProgress } = useScroll();
+  const smoothScaleX = useSpring(scrollYProgress, {
+    stiffness: 240,
+    damping: 32,
+    restDelta: 0.001,
+  });
 
   // Dynamically filter out navbar links for sections that are hidden
   const navKeys = ALL_NAV_KEYS.filter((key) => {
@@ -148,7 +156,13 @@ export default function Navbar() {
           : "bg-transparent border-b border-transparent"
       }`}
     >
-      <div className="max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-6 h-16">
+      {/* Thin scroll progress bar fixed at top, below Navbar content */}
+      <motion.div
+        aria-hidden="true"
+        style={{ scaleX: shouldReduceMotion ? scrollYProgress : smoothScaleX }}
+        className="fixed top-0 inset-x-0 h-[3px] bg-accent origin-left rtl:origin-right z-0 pointer-events-none"
+      />
+      <div className="max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-6 h-16 relative z-10">
         {/* Logo */}
         <a
           href="#home"
@@ -185,7 +199,11 @@ export default function Navbar() {
                     <motion.div
                       layoutId="activeNavIndicator"
                       className="absolute bottom-0 inset-x-0 h-0.5 bg-accent rounded-full"
-                      transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                      transition={
+                        shouldReduceMotion
+                          ? { duration: 0 }
+                          : { type: "spring", stiffness: 380, damping: 30 }
+                      }
                     />
                   )}
                 </button>
@@ -240,7 +258,7 @@ export default function Navbar() {
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.25 }}
+            transition={{ duration: shouldReduceMotion ? 0 : 0.25 }}
             className="lg:hidden overflow-hidden bg-white/95 dark:bg-gray-950/95 backdrop-blur-md border-t border-gray-200 dark:border-gray-800"
           >
             <ul className="flex flex-col py-3 px-4 gap-1 text-sm font-medium">
