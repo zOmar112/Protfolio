@@ -35,7 +35,7 @@
   }
 }
 
-/* ── Cockpit Hero Font & Terminal Cursor ── */
+/* ── Cockpit Hero Font ── */
 .font-cockpit,
 .font-cockpit * {
   font-family: "B612 Mono", ui-monospace, monospace;
@@ -44,26 +44,6 @@
 [dir="rtl"] .font-cockpit,
 [dir="rtl"] .font-cockpit * {
   font-family: "Cairo", sans-serif;
-}
-
-@keyframes cockpit-cursor-blink {
-  0%, 49% {
-    opacity: 1;
-  }
-  50%, 100% {
-    opacity: 0;
-  }
-}
-
-.cockpit-cursor {
-  animation: cockpit-cursor-blink 0.9s steps(1, end) infinite;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .cockpit-cursor {
-    animation: none !important;
-    display: none !important;
-  }
 }
 
 /* ── Distinct Number Highlight ── */
