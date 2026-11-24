@@ -37,6 +37,14 @@ function WhatsAppIcon() {
   );
 }
 
+function ExternalLinkIcon() {
+  return (
+    <svg className="w-3.5 h-3.5 opacity-60 group-hover:opacity-100 transition-opacity rtl:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25" />
+    </svg>
+  );
+}
+
 function CopyIcon() {
   return (
     <svg className="w-3.5 h-3.5 text-gray-400 group-hover:text-accent dark:group-hover:text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -124,6 +132,29 @@ export default function Footer() {
             </button>
           </div>
         </div>
+
+        {/* Freelance Profiles Bar */}
+        {footer.freelance && footer.freelance.length > 0 && (
+          <div className="w-full max-w-3xl mb-8">
+            <span className="block text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500 mb-3">
+              {footer.freelanceLabel}
+            </span>
+            <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-2.5">
+              {footer.freelance.map((platform) => (
+                <a
+                  key={platform.name}
+                  href={platform.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl border border-gray-200 dark:border-gray-800 bg-white/70 dark:bg-gray-900/70 text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-accent dark:hover:text-blue-400 hover:border-accent/60 dark:hover:border-blue-400/60 shadow-2xs hover:-translate-y-0.5 hover:shadow-xs transition-all duration-200 cursor-pointer"
+                >
+                  <span>{platform.name}</span>
+                  <ExternalLinkIcon />
+                </a>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Row of social icon links */}
         <div className="flex items-center justify-center gap-3 mb-8">
