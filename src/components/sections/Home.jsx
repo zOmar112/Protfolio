@@ -962,11 +962,11 @@ export default function Home() {
       <div className="w-full flex flex-col lg:flex-row items-center justify-between gap-10 lg:gap-16 py-8 font-cockpit overflow-x-clip">
         {/* Photo: above text on mobile (order-1), next to text on desktop (lg:order-2) */}
         <div className="order-1 lg:order-2 flex-shrink-0">
-          <div className="w-44 h-44 sm:w-56 sm:h-56 md:w-64 md:h-64 lg:w-72 lg:h-72 aspect-square rounded-2xl overflow-hidden border border-accent relative bg-gradient-to-b from-blue-50/80 to-blue-100/40 dark:from-gray-900/90 dark:to-gray-950 shadow-sm">
+          <div className="w-44 h-44 sm:w-56 sm:h-56 md:w-64 md:h-64 lg:w-72 lg:h-72 aspect-square relative flex items-center justify-center">
             {imgError ? (
               <div
                 aria-label="Omar Ibrahim"
-                className="w-full h-full rounded-2xl bg-accent/10 text-accent flex items-center justify-center text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight select-none"
+                className="w-full h-full text-accent flex items-center justify-center text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight select-none"
               >
                 OI
               </div>
@@ -974,14 +974,12 @@ export default function Home() {
               <img
                 src="/me.png"
                 alt="Omar Ibrahim"
-                className="w-full h-full object-cover rounded-2xl block opacity-100"
+                className="w-full h-full object-contain block select-none"
                 style={{
                   width: "100%",
                   height: "100%",
-                  objectFit: "cover",
-                  objectPosition: "50% 15%",
+                  objectFit: "contain",
                   display: "block",
-                  opacity: 1,
                 }}
                 onError={() => setImgError(true)}
               />
