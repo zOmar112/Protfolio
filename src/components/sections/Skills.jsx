@@ -23,15 +23,186 @@ function getArcMarginClass(index, total, side) {
   }
 }
 
+function AtcTowerSvg({
+  isActive,
+  isCoreFocus,
+  shouldReduceMotion,
+  idSuffix,
+  cabRef,
+  radarRef,
+  compact = false,
+}) {
+  return (
+    <div
+      className={`relative flex items-center justify-center select-none ${
+        compact
+          ? "w-[74px] h-[92px]"
+          : "w-[92px] h-[116px] lg:w-[104px] lg:h-[130px]"
+      }`}
+    >
+      {/* Anchor at top radar antenna for spotlight beam origin */}
+      {radarRef && (
+        <span
+          ref={radarRef}
+          aria-hidden="true"
+          className="pointer-events-none absolute top-[12%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-1 h-1"
+        />
+      )}
+      {/* Anchor at angled glass control cab for curved connection spokes */}
+      {cabRef && (
+        <span
+          ref={cabRef}
+          aria-hidden="true"
+          className="pointer-events-none absolute top-[30%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-1 h-1"
+        />
+      )}
+
+      <svg
+        viewBox="0 0 120 148"
+        className="w-full h-full overflow-visible drop-shadow-[0_6px_18px_rgba(37,99,235,0.28)] dark:drop-shadow-[0_6px_22px_rgba(34,211,238,0.25)]"
+        fill="none"
+        aria-hidden="true"
+      >
+        <defs>
+          <linearGradient id={`atcShaft-${idSuffix}`} x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="#1e3a8a" />
+            <stop offset="45%" stopColor="#2563eb" />
+            <stop offset="100%" stopColor="#1d4ed8" />
+          </linearGradient>
+          <linearGradient id={`atcCabGlass-${idSuffix}`} x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stopColor="#67e8f9" stopOpacity="0.95" />
+            <stop offset="55%" stopColor="#06b6d4" stopOpacity="0.62" />
+            <stop offset="100%" stopColor="#1e3a8a" stopOpacity="0.92" />
+          </linearGradient>
+          <linearGradient id={`atcRoof-${idSuffix}`} x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="#1e40af" />
+            <stop offset="50%" stopColor="#3b82f6" />
+            <stop offset="100%" stopColor="#1e40af" />
+          </linearGradient>
+          <radialGradient id={`atcBeacon-${idSuffix}`} cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="#a5f3fc" stopOpacity="1" />
+            <stop offset="50%" stopColor="#22d3ee" stopOpacity="0.65" />
+            <stop offset="100%" stopColor="#22d3ee" stopOpacity="0" />
+          </radialGradient>
+        </defs>
+
+        {/* Subtle pulsing radar rings around roof antenna */}
+        {!shouldReduceMotion && (
+          <>
+            <circle cx="60" cy="11" r="5" stroke="#22d3ee" strokeWidth="1.2" opacity="0.6">
+              <animate attributeName="r" values="4;18" dur="2.4s" repeatCount="indefinite" />
+              <animate attributeName="opacity" values="0.7;0" dur="2.4s" repeatCount="indefinite" />
+            </circle>
+            <circle cx="60" cy="11" r="5" stroke="#38bdf8" strokeWidth="1" opacity="0.45">
+              <animate attributeName="r" values="4;18" dur="2.4s" begin="1.2s" repeatCount="indefinite" />
+              <animate attributeName="opacity" values="0.6;0" dur="2.4s" begin="1.2s" repeatCount="indefinite" />
+            </circle>
+          </>
+        )}
+
+        {/* Antenna beacon halo */}
+        <circle
+          cx="60"
+          cy="11"
+          r={isActive ? 8 : 5.5}
+          fill={`url(#atcBeacon-${idSuffix})`}
+        />
+
+        {/* Roof Radar Antenna Mast & Dish */}
+        <line x1="60" y1="12" x2="60" y2="27" stroke="#38bdf8" strokeWidth="2.2" strokeLinecap="round" />
+        <path d="M51 19 Q60 15.5 69 19" stroke="#67e8f9" strokeWidth="2" strokeLinecap="round" />
+        <line x1="55" y1="23" x2="65" y2="23" stroke="#93c5fd" strokeWidth="1.4" strokeLinecap="round" />
+        <circle cx="60" cy="11" r="2.6" fill="#e0f2fe" stroke="#22d3ee" strokeWidth="1.2" />
+
+        {/* Roof Cap Overhang */}
+        <path
+          d="M27 33 L35 27 L85 27 L93 33 Z"
+          fill={`url(#atcRoof-${idSuffix})`}
+          stroke="#60a5fa"
+          strokeWidth="1.2"
+          strokeLinejoin="round"
+        />
+        <line x1="36" y1="27.5" x2="84" y2="27.5" stroke="#67e8f9" strokeWidth="1.2" strokeOpacity="0.85" strokeLinecap="round" />
+
+        {/* Angled Panoramic Glass Control Cab */}
+        <path
+          d="M31 33 L89 33 L82 55 L38 55 Z"
+          fill={`url(#atcCabGlass-${idSuffix})`}
+          stroke={isActive ? "#67e8f9" : "#38bdf8"}
+          strokeWidth={isActive ? "1.9" : "1.4"}
+          strokeLinejoin="round"
+        />
+        {/* Glass Window Mullions */}
+        <line x1="46" y1="33.5" x2="48.5" y2="54.5" stroke="#1e3a8a" strokeWidth="1.4" strokeOpacity="0.7" />
+        <line x1="60" y1="33.5" x2="60" y2="54.5" stroke="#1e3a8a" strokeWidth="1.4" strokeOpacity="0.7" />
+        <line x1="74" y1="33.5" x2="71.5" y2="54.5" stroke="#1e3a8a" strokeWidth="1.4" strokeOpacity="0.7" />
+        {/* Glass Glint */}
+        <path d="M36 36 L44 36 L41 49 L38 49 Z" fill="#ecfeff" fillOpacity="0.28" />
+
+        {/* Observation Catwalk Ledge */}
+        <rect x="33" y="55" width="54" height="5" rx="2" fill="#1d4ed8" stroke="#38bdf8" strokeWidth="1.1" />
+        <line
+          x1="37"
+          y1="57.5"
+          x2="83"
+          y2="57.5"
+          stroke="#22d3ee"
+          strokeWidth="1"
+          strokeOpacity={isActive || isCoreFocus ? "0.85" : "0.45"}
+        />
+
+        {/* Tapered Support Collar */}
+        <path
+          d="M40 60 L80 60 L72 72 L48 72 Z"
+          fill="#1e40af"
+          stroke="#3b82f6"
+          strokeWidth="1.2"
+          strokeLinejoin="round"
+        />
+
+        {/* Slender Tapered Tower Shaft */}
+        <path
+          d="M49.5 72 L70.5 72 L76 132 L44 132 Z"
+          fill={`url(#atcShaft-${idSuffix})`}
+          stroke="#60a5fa"
+          strokeWidth="1.2"
+          strokeLinejoin="round"
+        />
+        {/* Vertical Architectural Rib */}
+        <line x1="60" y1="74" x2="60" y2="130" stroke="#67e8f9" strokeWidth="1.2" strokeOpacity="0.4" strokeDasharray="4 4" />
+        {/* Accent Tower Slit Windows */}
+        <rect x="57" y="82" width="6" height="2.5" rx="1" fill="#67e8f9" fillOpacity="0.75" />
+        <rect x="57" y="95" width="6" height="2.5" rx="1" fill="#67e8f9" fillOpacity="0.55" />
+        <rect x="57" y="108" width="6" height="2.5" rx="1" fill="#67e8f9" fillOpacity="0.4" />
+
+        {/* Tower Base Plinth */}
+        <path
+          d="M36 132 L84 132 L89 140 L31 140 Z"
+          fill="#1e3a8a"
+          stroke="#3b82f6"
+          strokeWidth="1.2"
+          strokeLinejoin="round"
+        />
+        {/* Cyan Base Horizon Glow Line */}
+        <line x1="24" y1="141" x2="96" y2="141" stroke="#22d3ee" strokeWidth="1.6" strokeOpacity="0.65" strokeLinecap="round" />
+      </svg>
+    </div>
+  );
+}
+
 function NeuralCategoryBoard({ category, skillsData, lang, shouldReduceMotion }) {
   const [hoveredNode, setHoveredNode] = useState(null);
   const [lockedNode, setLockedNode] = useState(null);
 
   const stageRef = useRef(null);
   const coreRef = useRef(null);
+  const cabRef = useRef(null);
+  const radarRef = useRef(null);
   const leftRefs = useRef({});
   const rightRefs = useRef({});
   const [coords, setCoords] = useState(null);
+  const beamAngleRef = useRef(0);
+  const [beamAngle, setBeamAngle] = useState(0);
 
   const activeFocus = hoveredNode || lockedNode || {
     side: "core",
@@ -133,6 +304,8 @@ function NeuralCategoryBoard({ category, skillsData, lang, shouldReduceMotion })
     };
 
     const core = getCenter(coreEl);
+    const cab = cabRef.current ? getCenter(cabRef.current) : core;
+    const radar = radarRef.current ? getCenter(radarRef.current) : cab;
     const left = {};
     const right = {};
 
@@ -150,10 +323,34 @@ function NeuralCategoryBoard({ category, skillsData, lang, shouldReduceMotion })
       width: stageRect.width,
       height: stageRect.height,
       core,
+      cab,
+      radar,
       left,
       right,
     });
   }, [category]);
+
+  const focusedTargetPoint =
+    coords && activeFocus.side === "left"
+      ? coords.left[activeFocus.id]
+      : coords && activeFocus.side === "right"
+      ? coords.right[activeFocus.id]
+      : null;
+
+  const isBeamActive = Boolean(!isCoreFocus && focusedTargetPoint);
+
+  useEffect(() => {
+    if (!coords || !focusedTargetPoint) return;
+    const dx = focusedTargetPoint.x - coords.radar.x;
+    const dy = focusedTargetPoint.y - coords.radar.y;
+    const targetDeg = (Math.atan2(dy, dx) * 180) / Math.PI;
+
+    const current = beamAngleRef.current;
+    const delta = ((((targetDeg - current) % 360) + 540) % 360) - 180;
+    const next = current + delta;
+    beamAngleRef.current = next;
+    setBeamAngle(next);
+  }, [coords, focusedTargetPoint]);
 
   useLayoutEffect(() => {
     measureGraph();
@@ -253,13 +450,13 @@ function NeuralCategoryBoard({ category, skillsData, lang, shouldReduceMotion })
           onMouseLeave={() => setHoveredNode(null)}
           className="hidden md:block relative py-3"
         >
-          {/* SVG Neural Connections Layer */}
+          {/* SVG Neural Connections & Radar Spotlight Layer */}
           {coords && coords.width > 0 && (
             <svg
               width={coords.width}
               height={coords.height}
               viewBox={`0 0 ${coords.width} ${coords.height}`}
-              className="absolute inset-0 w-full h-full pointer-events-none z-0"
+              className="absolute inset-0 w-full h-full pointer-events-none z-0 overflow-visible"
               fill="none"
               aria-hidden="true"
             >
@@ -271,11 +468,86 @@ function NeuralCategoryBoard({ category, skillsData, lang, shouldReduceMotion })
                   x2="100%"
                   y2="0%"
                 >
-                  <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.5" />
-                  <stop offset="50%" stopColor="#2563eb" stopOpacity="0.98" />
-                  <stop offset="100%" stopColor="#3b82f6" stopOpacity="0.5" />
+                  <stop offset="0%" stopColor="#06b6d4" stopOpacity="0.75" />
+                  <stop offset="50%" stopColor="#22d3ee" stopOpacity="1" />
+                  <stop offset="100%" stopColor="#38bdf8" stopOpacity="0.85" />
                 </linearGradient>
+                <linearGradient
+                  id={`radarBeamOuter-${category.id}`}
+                  x1="0%"
+                  y1="50%"
+                  x2="100%"
+                  y2="50%"
+                >
+                  <stop offset="0%" stopColor="#22d3ee" stopOpacity="0.34" />
+                  <stop offset="45%" stopColor="#06b6d4" stopOpacity="0.14" />
+                  <stop offset="100%" stopColor="#06b6d4" stopOpacity="0" />
+                </linearGradient>
+                <linearGradient
+                  id={`radarBeamCore-${category.id}`}
+                  x1="0%"
+                  y1="50%"
+                  x2="100%"
+                  y2="50%"
+                >
+                  <stop offset="0%" stopColor="#67e8f9" stopOpacity="0.45" />
+                  <stop offset="55%" stopColor="#22d3ee" stopOpacity="0.12" />
+                  <stop offset="100%" stopColor="#22d3ee" stopOpacity="0" />
+                </linearGradient>
+                <filter
+                  id={`cyanLineGlow-${category.id}`}
+                  x="-20%"
+                  y="-20%"
+                  width="140%"
+                  height="140%"
+                >
+                  <feGaussianBlur stdDeviation="2.5" result="blur" />
+                  <feMerge>
+                    <feMergeNode in="blur" />
+                    <feMergeNode in="SourceGraphic" />
+                  </feMerge>
+                </filter>
               </defs>
+
+              {/* 0. Interactive Rotating Cyan Radar Spotlight Beam from Top of ATC Tower */}
+              {(() => {
+                const beamLen = Math.max(coords.width * 0.56, 260);
+                const halfSpread = beamLen * 0.27;
+                const coreSpread = beamLen * 0.11;
+                return (
+                  <g transform={`translate(${coords.radar.x}, ${coords.radar.y})`}>
+                    <motion.g
+                      style={{ transformOrigin: "0px 0px" }}
+                      initial={false}
+                      animate={{
+                        rotate: beamAngle,
+                        opacity: isBeamActive ? 1 : 0,
+                      }}
+                      transition={
+                        shouldReduceMotion
+                          ? { duration: 0 }
+                          : {
+                              rotate: {
+                                type: "spring",
+                                stiffness: 170,
+                                damping: 24,
+                              },
+                              opacity: { duration: 0.24 },
+                            }
+                      }
+                    >
+                      <path
+                        d={`M 0 0 L ${beamLen} ${-halfSpread} A ${beamLen} ${beamLen} 0 0 1 ${beamLen} ${halfSpread} Z`}
+                        fill={`url(#radarBeamOuter-${category.id})`}
+                      />
+                      <path
+                        d={`M 0 0 L ${beamLen} ${-coreSpread} A ${beamLen} ${beamLen} 0 0 1 ${beamLen} ${coreSpread} Z`}
+                        fill={`url(#radarBeamCore-${category.id})`}
+                      />
+                    </motion.g>
+                  </g>
+                );
+              })()}
 
               {/* 1. Faint Background Cross-Mesh Curves (Left <-> Linked Right) */}
               {category.leftNodes.map((lNode) => {
@@ -292,7 +564,7 @@ function NeuralCategoryBoard({ category, skillsData, lang, shouldReduceMotion })
 
                   const midX = (p1.x + p2.x) / 2;
                   const curvePull =
-                    (p1.y + p2.y) / 2 < coords.core.y ? -34 : 34;
+                    (p1.y + p2.y) / 2 < coords.cab.y ? -34 : 34;
                   const d = `M ${p1.x} ${p1.y} Q ${midX} ${
                     (p1.y + p2.y) / 2 + curvePull
                   } ${p2.x} ${p2.y}`;
@@ -303,66 +575,146 @@ function NeuralCategoryBoard({ category, skillsData, lang, shouldReduceMotion })
                       d={d}
                       className="text-accent dark:text-blue-400 transition-opacity duration-300"
                       stroke="currentColor"
-                      strokeWidth={isMeshActive ? 1.25 : 0.85}
-                      strokeOpacity={isMeshActive ? 0.28 : 0.08}
+                      strokeWidth={isMeshActive ? 1.2 : 0.85}
+                      strokeOpacity={isMeshActive ? 0.22 : 0.06}
                     />
                   );
                 });
               })}
 
-              {/* 2. Primary Spokes: Left Nodes -> Core */}
+              {/* 2. Primary Spokes: ATC Control Cab -> Left Nodes */}
               {category.leftNodes.map((lNode) => {
                 const p = coords.left[lNode.id];
                 if (!p) return null;
+                const isPrimaryTarget =
+                  activeFocus.side === "left" && activeFocus.id === lNode.id;
                 const isHighlighted = activeLeftIds.has(lNode.id);
-                const c1x = p.x + (coords.core.x - p.x) * 0.45;
-                const d = `M ${p.x} ${p.y} C ${c1x} ${p.y}, ${c1x} ${coords.core.y}, ${coords.core.x} ${coords.core.y}`;
+                const c1x = coords.cab.x + (p.x - coords.cab.x) * 0.45;
+                const d = `M ${coords.cab.x} ${coords.cab.y} C ${c1x} ${coords.cab.y}, ${c1x} ${p.y}, ${p.x} ${p.y}`;
 
                 return (
-                  <path
-                    key={`left-spoke-${lNode.id}`}
-                    d={d}
-                    className="text-accent dark:text-blue-400 transition-all duration-300"
-                    stroke={
-                      isHighlighted && !isCoreFocus
-                        ? `url(#neuralSpokeActive-${category.id})`
-                        : "currentColor"
-                    }
-                    strokeWidth={
-                      isHighlighted ? (isCoreFocus ? 1.65 : 2.35) : 1.1
-                    }
-                    strokeOpacity={
-                      isHighlighted ? (isCoreFocus ? 0.62 : 0.95) : 0.14
-                    }
-                  />
+                  <g key={`left-spoke-${lNode.id}`}>
+                    {isPrimaryTarget && (
+                      <path
+                        d={d}
+                        stroke="#22d3ee"
+                        strokeWidth={6}
+                        strokeOpacity={0.22}
+                        strokeLinecap="round"
+                      />
+                    )}
+                    <path
+                      d={d}
+                      className="text-accent dark:text-blue-400 transition-all duration-300"
+                      stroke={
+                        isPrimaryTarget
+                          ? `url(#neuralSpokeActive-${category.id})`
+                          : "currentColor"
+                      }
+                      filter={
+                        isPrimaryTarget
+                          ? `url(#cyanLineGlow-${category.id})`
+                          : undefined
+                      }
+                      strokeWidth={
+                        isPrimaryTarget
+                          ? 2.6
+                          : isHighlighted
+                          ? isCoreFocus
+                            ? 1.55
+                            : 1.7
+                          : 1.05
+                      }
+                      strokeOpacity={
+                        isPrimaryTarget
+                          ? 1
+                          : isHighlighted
+                          ? isCoreFocus
+                            ? 0.55
+                            : 0.45
+                          : 0.12
+                      }
+                      strokeLinecap="round"
+                    />
+                    {isPrimaryTarget && !shouldReduceMotion && (
+                      <g>
+                        <circle r="6" fill="#22d3ee" opacity="0.35">
+                          <animateMotion dur="1.25s" repeatCount="indefinite" path={d} />
+                        </circle>
+                        <circle r="2.8" fill="#ecfeff">
+                          <animateMotion dur="1.25s" repeatCount="indefinite" path={d} />
+                        </circle>
+                      </g>
+                    )}
+                  </g>
                 );
               })}
 
-              {/* 3. Primary Spokes: Core -> Right Nodes */}
+              {/* 3. Primary Spokes: ATC Control Cab -> Right Nodes */}
               {category.rightNodes.map((rNode) => {
                 const p = coords.right[rNode.id];
                 if (!p) return null;
+                const isPrimaryTarget =
+                  activeFocus.side === "right" && activeFocus.id === rNode.id;
                 const isHighlighted = activeRightIds.has(rNode.id);
-                const c1x = coords.core.x + (p.x - coords.core.x) * 0.55;
-                const d = `M ${coords.core.x} ${coords.core.y} C ${c1x} ${coords.core.y}, ${c1x} ${p.y}, ${p.x} ${p.y}`;
+                const c1x = coords.cab.x + (p.x - coords.cab.x) * 0.45;
+                const d = `M ${coords.cab.x} ${coords.cab.y} C ${c1x} ${coords.cab.y}, ${c1x} ${p.y}, ${p.x} ${p.y}`;
 
                 return (
-                  <path
-                    key={`right-spoke-${rNode.id}`}
-                    d={d}
-                    className="text-accent dark:text-blue-400 transition-all duration-300"
-                    stroke={
-                      isHighlighted && !isCoreFocus
-                        ? `url(#neuralSpokeActive-${category.id})`
-                        : "currentColor"
-                    }
-                    strokeWidth={
-                      isHighlighted ? (isCoreFocus ? 1.65 : 2.35) : 1.1
-                    }
-                    strokeOpacity={
-                      isHighlighted ? (isCoreFocus ? 0.62 : 0.95) : 0.14
-                    }
-                  />
+                  <g key={`right-spoke-${rNode.id}`}>
+                    {isPrimaryTarget && (
+                      <path
+                        d={d}
+                        stroke="#22d3ee"
+                        strokeWidth={6}
+                        strokeOpacity={0.22}
+                        strokeLinecap="round"
+                      />
+                    )}
+                    <path
+                      d={d}
+                      className="text-accent dark:text-blue-400 transition-all duration-300"
+                      stroke={
+                        isPrimaryTarget
+                          ? `url(#neuralSpokeActive-${category.id})`
+                          : "currentColor"
+                      }
+                      filter={
+                        isPrimaryTarget
+                          ? `url(#cyanLineGlow-${category.id})`
+                          : undefined
+                      }
+                      strokeWidth={
+                        isPrimaryTarget
+                          ? 2.6
+                          : isHighlighted
+                          ? isCoreFocus
+                            ? 1.55
+                            : 1.7
+                          : 1.05
+                      }
+                      strokeOpacity={
+                        isPrimaryTarget
+                          ? 1
+                          : isHighlighted
+                          ? isCoreFocus
+                            ? 0.55
+                            : 0.45
+                          : 0.12
+                      }
+                      strokeLinecap="round"
+                    />
+                    {isPrimaryTarget && !shouldReduceMotion && (
+                      <g>
+                        <circle r="6" fill="#22d3ee" opacity="0.35">
+                          <animateMotion dur="1.25s" repeatCount="indefinite" path={d} />
+                        </circle>
+                        <circle r="2.8" fill="#ecfeff">
+                          <animateMotion dur="1.25s" repeatCount="indefinite" path={d} />
+                        </circle>
+                      </g>
+                    )}
+                  </g>
                 );
               })}
             </svg>
@@ -397,13 +749,13 @@ function NeuralCategoryBoard({ category, skillsData, lang, shouldReduceMotion })
                     }
                     onBlur={() => setHoveredNode(null)}
                     onClick={() => toggleLock("left", node.id)}
-                    className={`${arcClass} px-4 py-2.5 rounded-2xl text-xs lg:text-sm font-medium border text-start transition-all duration-200 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent ${
+                    className={`${arcClass} px-4 py-2.5 rounded-2xl text-xs lg:text-sm font-medium border text-start transition-all duration-200 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 ${
                       isSelected
-                        ? "bg-blue-50 dark:bg-blue-950/90 border-accent dark:border-blue-400 text-accent dark:text-blue-300 shadow-sm shadow-blue-500/15 -translate-y-0.5"
+                        ? "bg-cyan-50/90 dark:bg-cyan-950/75 border-cyan-400 dark:border-cyan-300 text-blue-900 dark:text-cyan-100 shadow-[0_0_16px_rgba(34,211,238,0.4)] dark:shadow-[0_0_20px_rgba(34,211,238,0.45)] -translate-y-0.5"
                         : isHighlighted && !isCoreFocus
                         ? "bg-blue-50/80 dark:bg-gray-900 border-accent/70 dark:border-blue-400/70 text-gray-900 dark:text-blue-200 shadow-xs"
                         : isCoreFocus
-                        ? "bg-white dark:bg-gray-900 border-gray-200/90 dark:border-gray-800 text-gray-800 dark:text-gray-200 hover:border-accent/60 dark:hover:border-blue-400/60 shadow-2xs"
+                        ? "bg-white dark:bg-gray-900 border-gray-200/90 dark:border-gray-800 text-gray-800 dark:text-gray-200 hover:border-cyan-400/80 dark:hover:border-cyan-400/70 shadow-2xs"
                         : "bg-gray-50/95 dark:bg-gray-900/75 border-gray-200/60 dark:border-gray-800/60 text-gray-400 dark:text-gray-500"
                     }`}
                   >
@@ -413,11 +765,15 @@ function NeuralCategoryBoard({ category, skillsData, lang, shouldReduceMotion })
               })}
             </div>
 
-            {/* Center Column: Glowing Core Hub */}
-            <div className="relative flex items-center justify-center px-2">
+            {/* Center Column: Air Traffic Control (ATC) Tower Core Hub */}
+            <div className="relative flex flex-col items-center justify-center px-2">
               <div
                 aria-hidden="true"
-                className="absolute w-36 h-36 lg:w-44 lg:h-44 rounded-full bg-accent/20 dark:bg-blue-500/25 blur-2xl pointer-events-none"
+                className={`absolute w-40 h-40 lg:w-48 lg:h-48 rounded-full blur-2xl pointer-events-none transition-all duration-300 ${
+                  isBeamActive
+                    ? "bg-cyan-400/25 dark:bg-cyan-400/30 scale-105"
+                    : "bg-accent/20 dark:bg-blue-500/25"
+                }`}
               />
               <button
                 ref={coreRef}
@@ -430,13 +786,26 @@ function NeuralCategoryBoard({ category, skillsData, lang, shouldReduceMotion })
                 }
                 onBlur={() => setHoveredNode(null)}
                 onClick={() => toggleLock("core", category.core.id)}
-                className={`relative z-10 px-7 lg:px-9 py-3.5 lg:py-4 rounded-3xl text-base lg:text-lg font-bold tracking-wide rtl:tracking-normal text-white bg-accent border-2 transition-all duration-300 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-accent ${
-                  isCoreFocus
-                    ? "border-blue-300 dark:border-blue-300/80 shadow-[0_0_28px_rgba(37,99,235,0.4)] dark:shadow-[0_0_36px_rgba(59,130,246,0.5)] scale-[1.02]"
-                    : "border-blue-400/70 shadow-[0_0_18px_rgba(37,99,235,0.28)] hover:scale-[1.03]"
+                className={`relative z-10 flex flex-col items-center p-2 rounded-3xl transition-transform duration-300 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-cyan-400 ${
+                  isCoreFocus ? "scale-[1.02]" : "hover:scale-[1.03]"
                 }`}
               >
-                {category.core.label}
+                <AtcTowerSvg
+                  isActive={isBeamActive}
+                  isCoreFocus={isCoreFocus}
+                  shouldReduceMotion={shouldReduceMotion}
+                  idSuffix={`desktop-${category.id}`}
+                  cabRef={cabRef}
+                  radarRef={radarRef}
+                />
+                <span className="mt-1.5 inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full text-xs lg:text-sm font-bold tracking-wide rtl:tracking-normal text-blue-900 dark:text-cyan-100 bg-blue-50/95 dark:bg-blue-950/85 border border-blue-200/90 dark:border-cyan-400/40 shadow-xs">
+                  <span
+                    className={`w-1.5 h-1.5 rounded-full bg-cyan-400 shadow-[0_0_6px_#22d3ee] ${
+                      shouldReduceMotion ? "" : "animate-pulse"
+                    }`}
+                  />
+                  {category.core.label}
+                </span>
               </button>
             </div>
 
@@ -467,13 +836,13 @@ function NeuralCategoryBoard({ category, skillsData, lang, shouldReduceMotion })
                     }
                     onBlur={() => setHoveredNode(null)}
                     onClick={() => toggleLock("right", node.id)}
-                    className={`${arcClass} px-4 py-2.5 rounded-2xl text-xs lg:text-sm font-medium border text-end transition-all duration-200 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent ${
+                    className={`${arcClass} px-4 py-2.5 rounded-2xl text-xs lg:text-sm font-medium border text-end transition-all duration-200 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 ${
                       isSelected
-                        ? "bg-blue-50 dark:bg-blue-950/90 border-accent dark:border-blue-400 text-accent dark:text-blue-300 shadow-sm shadow-blue-500/15 -translate-y-0.5"
+                        ? "bg-cyan-50/90 dark:bg-cyan-950/75 border-cyan-400 dark:border-cyan-300 text-blue-900 dark:text-cyan-100 shadow-[0_0_16px_rgba(34,211,238,0.4)] dark:shadow-[0_0_20px_rgba(34,211,238,0.45)] -translate-y-0.5"
                         : isHighlighted && !isCoreFocus
                         ? "bg-blue-50/80 dark:bg-gray-900 border-accent/70 dark:border-blue-400/70 text-gray-900 dark:text-blue-200 shadow-xs"
                         : isCoreFocus
-                        ? "bg-white dark:bg-gray-900 border-gray-200/90 dark:border-gray-800 text-gray-800 dark:text-gray-200 hover:border-accent/60 dark:hover:border-blue-400/60 shadow-2xs"
+                        ? "bg-white dark:bg-gray-900 border-gray-200/90 dark:border-gray-800 text-gray-800 dark:text-gray-200 hover:border-cyan-400/80 dark:hover:border-cyan-400/70 shadow-2xs"
                         : "bg-gray-50/95 dark:bg-gray-900/75 border-gray-200/60 dark:border-gray-800/60 text-gray-400 dark:text-gray-500"
                     }`}
                   >
@@ -485,19 +854,29 @@ function NeuralCategoryBoard({ category, skillsData, lang, shouldReduceMotion })
           </div>
         </div>
 
-        {/* ── Mobile Responsive Neural Hub (< 768px) ── */}
+        {/* ── Mobile Responsive ATC Tower Hub (< 768px) ── */}
         <div className="md:hidden relative z-10 flex flex-col items-center py-2">
-          <div className="relative flex items-center justify-center mb-2">
+          <div className="relative flex flex-col items-center justify-center mb-2">
             <div
               aria-hidden="true"
-              className="absolute w-28 h-28 rounded-full bg-accent/20 dark:bg-blue-500/25 blur-xl pointer-events-none"
+              className="absolute w-32 h-32 rounded-full bg-cyan-400/20 dark:bg-cyan-400/25 blur-xl pointer-events-none"
             />
             <button
               type="button"
               onClick={() => toggleLock("core", category.core.id)}
-              className="relative z-10 px-7 py-3 rounded-3xl text-base font-bold text-white bg-accent border-2 border-blue-300/80 shadow-[0_0_24px_rgba(37,99,235,0.35)] cursor-pointer"
+              className="relative z-10 flex flex-col items-center cursor-pointer focus:outline-none"
             >
-              {category.core.label}
+              <AtcTowerSvg
+                isActive={!isCoreFocus}
+                isCoreFocus={isCoreFocus}
+                shouldReduceMotion={shouldReduceMotion}
+                idSuffix={`mobile-${category.id}`}
+                compact
+              />
+              <span className="mt-1 inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full text-xs font-bold text-blue-900 dark:text-cyan-100 bg-blue-50/95 dark:bg-blue-950/85 border border-blue-200/90 dark:border-cyan-400/40 shadow-xs">
+                <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 shadow-[0_0_6px_#22d3ee]" />
+                {category.core.label}
+              </span>
             </button>
           </div>
 

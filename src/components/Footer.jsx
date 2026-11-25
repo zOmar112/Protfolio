@@ -61,59 +61,14 @@ function CheckIcon() {
   );
 }
 
-/* Custom platform monochrome icons */
-function UpworkIcon() {
-  return (
-    <svg className="w-4 h-4 shrink-0" fill="currentColor" viewBox="0 0 24 24">
-      <path d="M18.561 13.158c-1.102 0-2.135-.467-3.074-1.227l.228-1.077.008-.043c.207-1.143.849-3.06 2.839-3.06 1.492 0 2.703 1.212 2.703 2.703-.001 1.489-1.212 2.704-2.704 2.704zm0-8.14c-3.14 0-5.466 2.228-6.096 5.56-1.096-1.636-1.782-3.693-1.921-5.698H7.669v7.12c0 2.072-1.685 3.757-3.757 3.757-2.071 0-3.756-1.685-3.756-3.757V4.88H0v7.12c0 3.659 2.977 6.637 6.636 6.637 3.66 0 6.637-2.978 6.637-6.637v-1.156c.645.922 1.464 1.761 2.455 2.404l-1.932 9.072h2.951l1.43-6.721c.732.176 1.496.273 2.285.273 3.14 0 5.696-2.556 5.696-5.696 0-3.14-2.556-5.696-5.696-5.696z" />
-    </svg>
-  );
-}
-
-function MostaqlIcon() {
-  return (
-    <svg className="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M20.25 14.15v4.25c0 1.094-.787 2.036-1.872 2.18-2.087.277-4.216.42-6.378.42s-4.291-.143-6.378-.42c-1.085-.144-1.872-1.086-1.872-2.18v-4.25m16.5 0a2.18 2.18 0 00.75-1.661V8.706c0-1.081-.768-2.015-1.837-2.175a48.114 48.114 0 00-3.413-.387m4.5 8.006c-.194.165-.42.295-.673.38A23.978 23.978 0 0112 15.75c-2.648 0-5.195-.429-7.577-1.22a2.016 2.016 0 01-.673-.38m0 0A2.18 2.18 0 013 12.489V8.706c0-1.081.768-2.015 1.837-2.175a48.111 48.111 0 013.413-.387m7.5 0V5.25A2.25 2.25 0 0013.5 3h-3a2.25 2.25 0 00-2.25 2.25v1.069m7.5 0c-2.483-.173-5.017-.173-7.5 0" />
-    </svg>
-  );
-}
-
-function KhamsatIcon() {
-  return (
-    <svg className="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
-      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-    </svg>
-  );
-}
-
-function NafezlyIcon() {
-  return (
-    <svg className="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
-      <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 00-2.91-.09z" />
-      <path d="M12 15l-3-3a22 22 0 012-3.95A12.88 12.88 0 0122 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 01-4 2z" />
-      <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0" />
-      <path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5" />
-    </svg>
-  );
-}
-
-function KafiilIcon() {
-  return (
-    <svg className="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
-      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-      <path d="M9 12l2 2 4-4" />
-    </svg>
-  );
-}
-
-function getPlatformIcon(name = "", url = "") {
+function getPlatformLogo(name = "", url = "") {
   const target = `${name} ${url}`.toLowerCase();
-  if (target.includes("upwork")) return <UpworkIcon />;
-  if (target.includes("mostaql")) return <MostaqlIcon />;
-  if (target.includes("khamsat")) return <KhamsatIcon />;
-  if (target.includes("nafezly")) return <NafezlyIcon />;
-  if (target.includes("kafiil")) return <KafiilIcon />;
-  return <ExternalLinkIcon />;
+  if (target.includes("mostaql")) return "/platforms/mostaql.jpg";
+  if (target.includes("upwork")) return "/platforms/upwork.jpg";
+  if (target.includes("khamsat")) return "/platforms/khamsat.jpg";
+  if (target.includes("nafezly")) return "/platforms/nafezly.jpg";
+  if (target.includes("kafiil")) return "/platforms/kafiil.jpg";
+  return null;
 }
 
 export default function Footer() {
@@ -221,26 +176,36 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Column 3: Freelance Platforms with Icons */}
+          {/* Column 3: Freelance Platforms with Logo Images */}
           <div className="flex flex-col items-start text-start">
             <h4 className="text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500 mb-4">
               {isRtl ? (footer.freelanceLabel || "منصات العمل الحر") : "HIRE ME ON FREELANCE PLATFORMS"}
             </h4>
             {footer.freelance && footer.freelance.length > 0 && (
               <div className="flex flex-wrap gap-2.5">
-                {footer.freelance.map((platform) => (
-                  <a
-                    key={platform.name}
-                    href={platform.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group inline-flex items-center gap-2 px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-800 bg-white/70 dark:bg-gray-900/70 text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-accent dark:hover:text-blue-400 hover:border-accent/60 dark:hover:border-blue-400/60 shadow-2xs hover:-translate-y-0.5 hover:shadow-xs transition-all duration-200 cursor-pointer"
-                  >
-                    {getPlatformIcon(platform.name, platform.url)}
-                    <span>{platform.name}</span>
-                    <ExternalLinkIcon />
-                  </a>
-                ))}
+                {footer.freelance.map((platform) => {
+                  const logoSrc = getPlatformLogo(platform.name, platform.url);
+                  return (
+                    <a
+                      key={platform.name}
+                      href={platform.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group inline-flex items-center gap-2 px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-800 bg-white/70 dark:bg-gray-900/70 text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-accent dark:hover:text-blue-400 hover:border-accent/60 dark:hover:border-blue-400/60 shadow-2xs hover:-translate-y-0.5 hover:shadow-xs transition-all duration-200 cursor-pointer"
+                    >
+                      {logoSrc && (
+                        <img
+                          src={logoSrc}
+                          alt=""
+                          aria-hidden="true"
+                          className="w-5 h-5 rounded object-cover shrink-0"
+                        />
+                      )}
+                      <span>{platform.name}</span>
+                      <ExternalLinkIcon />
+                    </a>
+                  );
+                })}
               </div>
             )}
           </div>
