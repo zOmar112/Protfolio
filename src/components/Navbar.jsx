@@ -3,7 +3,7 @@ import { motion, AnimatePresence, useScroll, useSpring, useReducedMotion } from 
 import { useTheme } from "../context/ThemeContext";
 import { useLanguage } from "../context/LanguageContext";
 
-const ALL_NAV_KEYS = [
+export const ALL_NAV_KEYS = [
   "home",
   "about",
   "education",
@@ -14,6 +14,16 @@ const ALL_NAV_KEYS = [
   "achievements",
   "testimonials",
 ];
+
+export function getVisibleNavKeys(t) {
+  return ALL_NAV_KEYS.filter((key) => {
+    if (key === "achievements" && (!t.achievements?.items || t.achievements.items.length < 2)) return false;
+    if (key === "experience" && (!t.experience?.items || t.experience.items.length === 0)) return false;
+    if (key === "services" && (!t.services?.items || t.services.items.length === 0)) return false;
+    if (key === "projects" && (!t.projects?.items || t.projects.items.length === 0)) return false;
+    return true;
+  });
+}
 
 /* ── Icons ── */
 function SunIcon() {
@@ -108,13 +118,7 @@ export default function Navbar() {
   });
 
   // Dynamically filter out navbar links for sections that are hidden
-  const navKeys = ALL_NAV_KEYS.filter((key) => {
-    if (key === "achievements" && (!t.achievements?.items || t.achievements.items.length < 2)) return false;
-    if (key === "experience" && (!t.experience?.items || t.experience.items.length === 0)) return false;
-    if (key === "services" && (!t.services?.items || t.services.items.length === 0)) return false;
-    if (key === "projects" && (!t.projects?.items || t.projects.items.length === 0)) return false;
-    return true;
-  });
+  const navKeys = getVisibleNavKeys(t);
 
   useEffect(() => {
     const handleScroll = () => {

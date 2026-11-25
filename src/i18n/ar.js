@@ -531,6 +531,14 @@ const ar = {
   backToTop: {
     label: "العودة للأعلى",
   },
+  flightTracker: {
+    ariaLabel: "تقدم الصفحة",
+    phases: {
+      climb: "صعود",
+      cruise: "تحليق",
+      descent: "هبوط",
+    },
+  },
   backgroundSwitcher: {
     label: "تغيير خلفية المشهد",
     title: "خلفية المشهد",

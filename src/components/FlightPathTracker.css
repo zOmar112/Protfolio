@@ -1,0 +1,141 @@
+/* ── Flight Path Scroll-Progress Tracker ── */
+
+.flight-tracker-panel {
+  position: fixed;
+  top: 50%;
+  inset-inline-end: 16px;
+  transform: translateY(-50%);
+  width: 56px;
+  height: 60vh;
+  min-height: 340px;
+  max-height: 660px;
+  border-radius: 28px;
+  z-index: 30;
+  pointer-events: none;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 0;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(37, 99, 235, 0.18);
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  user-select: none;
+}
+
+.dark .flight-tracker-panel {
+  background: rgba(2, 6, 23, 0.72);
+  border-color: rgba(96, 165, 250, 0.22);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+}
+
+@media (min-width: 1100px) {
+  .flight-tracker-panel {
+    display: flex;
+  }
+}
+
+/* Numeric cockpit readouts always stay B612 Mono with tabular numerals */
+.flight-tracker-mono {
+  font-family: "B612 Mono", ui-monospace, monospace !important;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Restore normal pointer cursor on interactive waypoint buttons */
+.flight-tracker-panel .flight-tracker-waypoint,
+.flight-tracker-panel .flight-tracker-waypoint * {
+  cursor: pointer !important;
+}
+
+/* Soft pulsing glow behind the airplane head */
+@keyframes flight-glow-pulse {
+  0%,
+  100% {
+    opacity: 0.45;
+    transform: translate(-50%, -50%) scale(0.92);
+  }
+  50% {
+    opacity: 0.75;
+    transform: translate(-50%, -50%) scale(1.12);
+  }
+}
+
+.flight-tracker-glow {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 26px;
+  height: 26px;
+  border-radius: 9999px;
+  background: radial-gradient(
+    circle,
+    rgba(37, 99, 235, 0.48) 0%,
+    rgba(59, 130, 246, 0.14) 55%,
+    transparent 75%
+  );
+  filter: blur(3px);
+  animation: flight-glow-pulse 2.6s ease-in-out infinite;
+  will-change: transform, opacity;
+  pointer-events: none;
+}
+
+.dark .flight-tracker-glow {
+  background: radial-gradient(
+    circle,
+    rgba(96, 165, 250, 0.58) 0%,
+    rgba(59, 130, 246, 0.18) 55%,
+    transparent 75%
+  );
+}
+
+/* Waypoint tooltip: appears inward from the screen edge to avoid horizontal overflow */
+.flight-tracker-tooltip {
+  position: absolute;
+  top: 50%;
+  right: calc(100% + 12px);
+  transform: translateY(-50%) translateX(4px);
+  opacity: 0;
+  pointer-events: none;
+  white-space: nowrap;
+  padding: 4px 9px;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.25;
+  background: rgba(15, 23, 42, 0.92);
+  color: #f8fafc;
+  border: 1px solid rgba(148, 163, 184, 0.22);
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.2);
+  transition: opacity 150ms ease, transform 150ms ease;
+}
+
+.dark .flight-tracker-tooltip {
+  background: rgba(15, 23, 42, 0.96);
+  color: #e2e8f0;
+  border-color: rgba(96, 165, 250, 0.28);
+}
+
+[dir="rtl"] .flight-tracker-tooltip {
+  right: auto;
+  left: calc(100% + 12px);
+  transform: translateY(-50%) translateX(-4px);
+}
+
+.flight-tracker-waypoint:hover .flight-tracker-tooltip,
+.flight-tracker-waypoint:focus-visible .flight-tracker-tooltip {
+  opacity: 1;
+  transform: translateY(-50%) translateX(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flight-tracker-glow {
+    animation: none !important;
+    display: none !important;
+  }
+
+  .flight-tracker-tooltip {
+    transition: none !important;
+  }
+}

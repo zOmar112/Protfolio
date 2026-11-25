@@ -533,6 +533,14 @@ const en = {
   backToTop: {
     label: "Back to top",
   },
+  flightTracker: {
+    ariaLabel: "Page progress",
+    phases: {
+      climb: "CLIMB",
+      cruise: "CRUISE",
+      descent: "DESCENT",
+    },
+  },
   backgroundSwitcher: {
     label: "Change background scene",
     title: "Background Scene",
