@@ -34,24 +34,47 @@ function ChatMessageIcon() {
   );
 }
 
+function StarIcon({ filled = true, className = "w-5 h-5" }) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 20 20"
+      fill={filled ? "currentColor" : "none"}
+      stroke="currentColor"
+      strokeWidth={filled ? 0 : 1.5}
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+      />
+    </svg>
+  );
+}
+
 export default function Testimonials() {
   const { t } = useLanguage();
   const testimonials = t.testimonials;
   const shouldReduceMotion = useReducedMotion();
   const [modalOpen, setModalOpen] = useState(false);
   const [formSent, setFormSent] = useState(false);
+  const [rating, setRating] = useState(5);
+  const [hoveredRating, setHoveredRating] = useState(0);
   const [formData, setFormData] = useState({ name: "", role: "", feedback: "" });
 
   const handleLeaveTestimonial = () => {
+    setRating(5);
+    setHoveredRating(0);
     setModalOpen(true);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const recipient = "imm5201978@gmail.com";
-    const subject = encodeURIComponent(`Testimonial from ${formData.name}`);
+    const subject = encodeURIComponent(`Testimonial (${rating}★) from ${formData.name}`);
+    const starsText = "★".repeat(rating) + "☆".repeat(5 - rating);
     const body = encodeURIComponent(
-      `Name: ${formData.name}\nRole: ${formData.role}\n\nFeedback:\n${formData.feedback}`
+      `Name: ${formData.name}\nRole: ${formData.role}\nRating: ${rating}/5 (${starsText})\n\nFeedback:\n${formData.feedback}`
     );
     window.location.href = `mailto:${recipient}?subject=${subject}&body=${body}`;
     setFormSent(true);
@@ -59,8 +82,12 @@ export default function Testimonials() {
       setModalOpen(false);
       setFormSent(false);
       setFormData({ name: "", role: "", feedback: "" });
+      setRating(5);
+      setHoveredRating(0);
     }, 2000);
   };
+
+  const activeRating = hoveredRating || rating;
 
   return (
     <>
@@ -93,7 +120,7 @@ export default function Testimonials() {
             </button>
           </div>
 
-          {/* Central Neural / Awaiting Card matching the image */}
+          {/* Central Neural / Awaiting Card */}
           <motion.div
             initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -108,8 +135,15 @@ export default function Testimonials() {
             />
 
             {/* Quote Marks Hub Box with soft border glow */}
-            <div className="w-14 h-14 rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950/80 shadow-sm flex items-center justify-center mb-6">
+            <div className="w-14 h-14 rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950/80 shadow-sm flex items-center justify-center mb-5">
               <QuoteMarksIcon />
+            </div>
+
+            {/* 5-Star Rating Preview Badge */}
+            <div className="flex items-center gap-1.5 text-amber-400 dark:text-amber-400 mb-3 drop-shadow-[0_0_8px_rgba(251,191,36,0.35)]">
+              {[1, 2, 3, 4, 5].map((s) => (
+                <StarIcon key={s} filled className="w-5 h-5" />
+              ))}
             </div>
 
             {/* Mini Upper Kicker */}
@@ -148,6 +182,7 @@ export default function Testimonials() {
                 type="button"
                 onClick={() => setModalOpen(false)}
                 className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 text-lg leading-none cursor-pointer"
+                aria-label="Close"
               >
                 ✕
               </button>
@@ -155,48 +190,87 @@ export default function Testimonials() {
 
             {formSent ? (
               <div className="py-8 text-center text-sm font-medium text-emerald-600 dark:text-emerald-400">
-                ✓ Thank you! Opening your email client to send your feedback.
+                {testimonials.successMessage || "✓ Thank you! Opening your email client to send your feedback."}
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-3.5">
                 <div>
                   <label className="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">
-                    Your Name
+                    {testimonials.nameLabel || "Your Name"}
                   </label>
                   <input
                     type="text"
                     required
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    placeholder="e.g. Dr. Ahmed Hassan"
+                    placeholder={testimonials.namePlaceholder || "e.g. Dr. Ahmed Hassan"}
                     className="w-full px-3 py-2 text-sm rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-950 text-gray-900 dark:text-white focus:outline-none focus:border-accent"
                   />
                 </div>
 
                 <div>
                   <label className="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">
-                    Your Role / Relationship
+                    {testimonials.roleLabel || "Your Role / Relationship"}
                   </label>
                   <input
                     type="text"
                     required
                     value={formData.role}
                     onChange={(e) => setFormData({ ...formData, role: e.target.value })}
-                    placeholder="e.g. Mentor / Project Teammate / Client"
+                    placeholder={testimonials.rolePlaceholder || "e.g. Mentor / Project Teammate / Client"}
                     className="w-full px-3 py-2 text-sm rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-950 text-gray-900 dark:text-white focus:outline-none focus:border-accent"
                   />
                 </div>
 
+                {/* Interactive Star Rating Selector */}
+                <div>
+                  <div className="flex items-center justify-between mb-1.5">
+                    <label className="block text-xs font-semibold text-gray-700 dark:text-gray-300">
+                      {testimonials.ratingLabel || "Rating"}
+                    </label>
+                    <span className="text-xs font-bold text-amber-500 dark:text-amber-400">
+                      {activeRating} / 5
+                    </span>
+                  </div>
+                  <div
+                    className="flex items-center gap-1.5 p-2 rounded-xl bg-gray-50/80 dark:bg-gray-950/60 border border-gray-200/80 dark:border-gray-800"
+                    onMouseLeave={() => setHoveredRating(0)}
+                  >
+                    {[1, 2, 3, 4, 5].map((star) => {
+                      const isFilled = star <= activeRating;
+                      return (
+                        <button
+                          key={star}
+                          type="button"
+                          onClick={() => setRating(star)}
+                          onMouseEnter={() => setHoveredRating(star)}
+                          className="p-1 rounded-lg text-amber-400 hover:scale-120 active:scale-95 transition-transform cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                          aria-label={`${star} star${star > 1 ? "s" : ""}`}
+                        >
+                          <StarIcon
+                            filled={isFilled}
+                            className={`w-7 h-7 transition-colors ${
+                              isFilled
+                                ? "text-amber-400 drop-shadow-[0_0_6px_rgba(251,191,36,0.6)]"
+                                : "text-gray-300 dark:text-gray-700"
+                            }`}
+                          />
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
                 <div>
                   <label className="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">
-                    Your Testimonial / Feedback
+                    {testimonials.feedbackLabel || "Your Testimonial / Feedback"}
                   </label>
                   <textarea
                     rows={4}
                     required
                     value={formData.feedback}
                     onChange={(e) => setFormData({ ...formData, feedback: e.target.value })}
-                    placeholder="Share your thoughts about working with Omar..."
+                    placeholder={testimonials.feedbackPlaceholder || "Share your thoughts about working with Omar..."}
                     className="w-full px-3 py-2 text-sm rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-950 text-gray-900 dark:text-white focus:outline-none focus:border-accent resize-none"
                   />
                 </div>
@@ -205,7 +279,7 @@ export default function Testimonials() {
                   type="submit"
                   className="w-full py-2.5 px-4 rounded-xl bg-accent text-white font-medium text-xs sm:text-sm hover:opacity-90 shadow-sm transition-all cursor-pointer"
                 >
-                  Send via Email
+                  {testimonials.sendButton || "Send via Email"}
                 </button>
               </form>
             )}

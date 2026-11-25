@@ -512,6 +512,15 @@ const en = {
     badge: "AWAITING VERIFIED REVIEWS",
     placeholderTitle: "Testimonials Coming Soon",
     placeholderText: "Verified feedback from academic mentors, instructors, and project collaborators will be published here once shared.",
+    ratingLabel: "Rating",
+    nameLabel: "Your Name",
+    namePlaceholder: "e.g. Dr. Ahmed Hassan",
+    roleLabel: "Your Role / Relationship",
+    rolePlaceholder: "e.g. Mentor / Project Teammate / Client",
+    feedbackLabel: "Your Testimonial / Feedback",
+    feedbackPlaceholder: "Share your thoughts about working with Omar...",
+    sendButton: "Send via Email",
+    successMessage: "✓ Thank you! Opening your email client to send your feedback.",
   },
   footer: {
     intro:
