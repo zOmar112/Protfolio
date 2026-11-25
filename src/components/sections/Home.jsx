@@ -50,6 +50,324 @@ function AirplaneCursor({ isRtl, isDeleting = false }) {
   );
 }
 
+/* Subtle Minimalist Aviation Backdrop behind Hero Cutout Portrait (z-0) */
+function PortraitAviationBackdrop({ shouldReduceMotion }) {
+  return (
+    <div
+      dir="ltr"
+      aria-hidden="true"
+      className="pointer-events-none select-none absolute -inset-5 sm:-inset-7 z-0 opacity-40 dark:opacity-45"
+      style={{
+        WebkitMaskImage:
+          "linear-gradient(to bottom, #000 0%, #000 80%, transparent 100%)",
+        maskImage:
+          "linear-gradient(to bottom, #000 0%, #000 80%, transparent 100%)",
+      }}
+    >
+      <svg
+        viewBox="0 0 320 320"
+        className="w-full h-full overflow-visible"
+        fill="none"
+      >
+        <defs>
+          <radialGradient id="heroPortraitAmbient" cx="52%" cy="48%" r="48%">
+            <stop offset="0%" stopColor="#1d4ed8" stopOpacity="0.24" />
+            <stop offset="55%" stopColor="#0ea5e9" stopOpacity="0.08" />
+            <stop offset="100%" stopColor="#0B1120" stopOpacity="0" />
+          </radialGradient>
+          <radialGradient id="heroAtcCabGlow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="#22d3ee" stopOpacity="0.55" />
+            <stop offset="45%" stopColor="#38bdf8" stopOpacity="0.18" />
+            <stop offset="100%" stopColor="#0B1120" stopOpacity="0" />
+          </radialGradient>
+          <linearGradient id="heroAtcCabGlass" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stopColor="#67e8f9" stopOpacity="0.38" />
+            <stop offset="100%" stopColor="#1d4ed8" stopOpacity="0.12" />
+          </linearGradient>
+          <linearGradient
+            id="heroAtcTowerFade"
+            x1="254"
+            y1="95"
+            x2="254"
+            y2="234"
+            gradientUnits="userSpaceOnUse"
+          >
+            <stop offset="0%" stopColor="#38bdf8" stopOpacity="0.85" />
+            <stop offset="55%" stopColor="#2563eb" stopOpacity="0.55" />
+            <stop offset="100%" stopColor="#1e3a8a" stopOpacity="0" />
+          </linearGradient>
+          <linearGradient
+            id="heroFlightPath1"
+            x1="18"
+            y1="148"
+            x2="108"
+            y2="47"
+            gradientUnits="userSpaceOnUse"
+          >
+            <stop offset="0%" stopColor="#1d4ed8" stopOpacity="0" />
+            <stop offset="50%" stopColor="#3b82f6" stopOpacity="0.55" />
+            <stop offset="100%" stopColor="#22d3ee" stopOpacity="0.95" />
+          </linearGradient>
+          <linearGradient
+            id="heroFlightPath2"
+            x1="196"
+            y1="42"
+            x2="289"
+            y2="59"
+            gradientUnits="userSpaceOnUse"
+          >
+            <stop offset="0%" stopColor="#2563eb" stopOpacity="0" />
+            <stop offset="55%" stopColor="#38bdf8" stopOpacity="0.55" />
+            <stop offset="100%" stopColor="#67e8f9" stopOpacity="0.95" />
+          </linearGradient>
+          <linearGradient
+            id="heroFlightPath3"
+            x1="14"
+            y1="214"
+            x2="64"
+            y2="159"
+            gradientUnits="userSpaceOnUse"
+          >
+            <stop offset="0%" stopColor="#1e40af" stopOpacity="0" />
+            <stop offset="60%" stopColor="#3b82f6" stopOpacity="0.45" />
+            <stop offset="100%" stopColor="#38bdf8" stopOpacity="0.85" />
+          </linearGradient>
+        </defs>
+
+        {/* Soft Royal-Blue / Cyan Ambient Halo */}
+        <circle cx="164" cy="154" r="142" fill="url(#heroPortraitAmbient)" />
+
+        {/* Subtle Concentric Radar Rings & Azimuth Ticks */}
+        <circle
+          cx="160"
+          cy="158"
+          r="144"
+          stroke="#2563eb"
+          strokeWidth="0.75"
+          strokeOpacity="0.45"
+          strokeDasharray="2 5"
+        />
+        <path
+          d="M 48 198 A 120 120 0 0 1 102 53 M 218 53 A 120 120 0 0 1 272 198"
+          stroke="#38bdf8"
+          strokeWidth="0.85"
+          strokeOpacity="0.42"
+        />
+        <path
+          d="M 68 184 A 96 96 0 0 1 96 86 M 224 86 A 96 96 0 0 1 252 184"
+          stroke="#22d3ee"
+          strokeWidth="0.75"
+          strokeOpacity="0.32"
+          strokeDasharray="3 4"
+        />
+        <path
+          d="M 12 158 L 20 158 M 300 158 L 308 158 M 55 55 L 61 61 M 265 55 L 259 61"
+          stroke="#38bdf8"
+          strokeWidth="0.8"
+          strokeOpacity="0.45"
+          strokeLinecap="round"
+        />
+
+        {/* Sleek Line-Art ATC Tower (Right Side Behind Shoulder) */}
+        <g>
+          {/* Soft Glowing Cyan Radar Halo & Pulse around Cab */}
+          <circle cx="254" cy="101" r="34" fill="url(#heroAtcCabGlow)" />
+          {shouldReduceMotion ? (
+            <>
+              <circle
+                cx="254"
+                cy="96"
+                r="16"
+                stroke="#22d3ee"
+                strokeWidth="0.8"
+                strokeOpacity="0.35"
+              />
+              <circle
+                cx="254"
+                cy="96"
+                r="26"
+                stroke="#38bdf8"
+                strokeWidth="0.65"
+                strokeOpacity="0.2"
+                strokeDasharray="2 3"
+              />
+            </>
+          ) : (
+            <>
+              <circle cx="254" cy="96" r="8" stroke="#22d3ee" strokeWidth="1">
+                <animate
+                  attributeName="r"
+                  values="7;30"
+                  dur="3.2s"
+                  repeatCount="indefinite"
+                />
+                <animate
+                  attributeName="opacity"
+                  values="0.75;0"
+                  dur="3.2s"
+                  repeatCount="indefinite"
+                />
+              </circle>
+              <circle cx="254" cy="96" r="8" stroke="#38bdf8" strokeWidth="0.85">
+                <animate
+                  attributeName="r"
+                  values="7;30"
+                  dur="3.2s"
+                  begin="1.6s"
+                  repeatCount="indefinite"
+                />
+                <animate
+                  attributeName="opacity"
+                  values="0.6;0"
+                  dur="3.2s"
+                  begin="1.6s"
+                  repeatCount="indefinite"
+                />
+              </circle>
+            </>
+          )}
+
+          {/* Roof Radar Dish & Beacon Mast */}
+          <line
+            x1="254"
+            y1="78"
+            x2="254"
+            y2="91"
+            stroke="#67e8f9"
+            strokeWidth="1.15"
+            strokeLinecap="round"
+          />
+          <path
+            d="M 247 84 Q 254 81 261 84"
+            stroke="#67e8f9"
+            strokeWidth="1.1"
+            strokeLinecap="round"
+          />
+          <circle cx="254" cy="77" r="1.8" fill="#a5f3fc" />
+
+          {/* Roof Overhang */}
+          <path
+            d="M 233 96 L 239 91 L 269 91 L 275 96 Z"
+            fill="#1e3a8a"
+            fillOpacity="0.45"
+            stroke="#60a5fa"
+            strokeWidth="1"
+            strokeLinejoin="round"
+          />
+
+          {/* Angled Panoramic Glass Control Cab */}
+          <path
+            d="M 235 96 L 273 96 L 268 111 L 240 111 Z"
+            fill="url(#heroAtcCabGlass)"
+            stroke="#67e8f9"
+            strokeWidth="1.15"
+            strokeLinejoin="round"
+          />
+          <line
+            x1="246"
+            y1="96.5"
+            x2="248"
+            y2="110.5"
+            stroke="#38bdf8"
+            strokeWidth="0.8"
+            strokeOpacity="0.65"
+          />
+          <line
+            x1="254"
+            y1="96.5"
+            x2="254"
+            y2="110.5"
+            stroke="#38bdf8"
+            strokeWidth="0.8"
+            strokeOpacity="0.65"
+          />
+          <line
+            x1="262"
+            y1="96.5"
+            x2="260"
+            y2="110.5"
+            stroke="#38bdf8"
+            strokeWidth="0.8"
+            strokeOpacity="0.65"
+          />
+
+          {/* Catwalk Deck & Tapered Structural Shaft */}
+          <path
+            d="M 237 114 L 271 114"
+            stroke="#3b82f6"
+            strokeWidth="1.05"
+            strokeLinecap="round"
+          />
+          <path
+            d="M 245 114 L 239 232 M 263 114 L 269 232"
+            stroke="url(#heroAtcTowerFade)"
+            strokeWidth="1.1"
+            strokeLinecap="round"
+          />
+          <line
+            x1="254"
+            y1="114"
+            x2="254"
+            y2="224"
+            stroke="url(#heroAtcTowerFade)"
+            strokeWidth="0.7"
+            strokeOpacity="0.55"
+          />
+          <path
+            d="M 244 132 L 264 132 M 243 152 L 265 152 M 242 174 L 266 174 M 241 198 L 267 198"
+            stroke="url(#heroAtcTowerFade)"
+            strokeWidth="0.8"
+          />
+          <path
+            d="M 245 114 L 264 132 M 263 114 L 244 132 M 244 132 L 265 152 M 264 132 L 243 152 M 243 152 L 266 174 M 265 152 L 242 174"
+            stroke="url(#heroAtcTowerFade)"
+            strokeWidth="0.65"
+            strokeOpacity="0.6"
+          />
+        </g>
+
+        {/* Curved Flight Path 1 + Commercial Jet Silhouette (Upper-Left Climb) */}
+        <path
+          d="M 18 148 Q 50 74 107.5 46.8"
+          stroke="url(#heroFlightPath1)"
+          strokeWidth="1"
+          strokeDasharray="3 3.5"
+          strokeLinecap="round"
+        />
+        <circle cx="24" cy="136" r="1.5" fill="#3b82f6" fillOpacity="0.65" />
+        <g transform="translate(114 44) rotate(65) scale(0.52) translate(-12 -12)">
+          <path d={PLANE_PATH} fill="#67e8f9" />
+        </g>
+
+        {/* Curved Flight Path 2 + Commercial Jet Silhouette (Upper-Right Outbound) */}
+        <path
+          d="M 196 42 Q 244 33 288.5 59"
+          stroke="url(#heroFlightPath2)"
+          strokeWidth="0.95"
+          strokeDasharray="2.5 3.5"
+          strokeLinecap="round"
+        />
+        <circle cx="196" cy="42" r="1.4" fill="#38bdf8" fillOpacity="0.6" />
+        <g transform="translate(293.5 62) rotate(120) scale(0.45) translate(-12 -12)">
+          <path d={PLANE_PATH} fill="#38bdf8" />
+        </g>
+
+        {/* Curved Flight Path 3 + Commercial Jet Silhouette (Lower-Left Departure) */}
+        <path
+          d="M 14 214 Q 35 179 64 159"
+          stroke="url(#heroFlightPath3)"
+          strokeWidth="0.85"
+          strokeDasharray="2.5 3.5"
+          strokeLinecap="round"
+        />
+        <g transform="translate(68 156) rotate(55.5) scale(0.38) translate(-12 -12)">
+          <path d={PLANE_PATH} fill="#60a5fa" />
+        </g>
+      </svg>
+    </div>
+  );
+}
+
 export default function Home() {
   const { t, lang } = useLanguage();
   const shouldReduceMotion = useReducedMotion();
@@ -377,26 +695,41 @@ export default function Home() {
         {/* Photo: above text on mobile (order-1), next to text on desktop (lg:order-2) */}
         <div className="order-1 lg:order-2 flex-shrink-0">
           <div className="w-44 h-44 sm:w-56 sm:h-56 md:w-64 md:h-64 lg:w-72 lg:h-72 aspect-square relative flex items-center justify-center">
+            {/* Decorative Aviation Backdrop (z-0, behind z-10 cutout portrait) */}
+            <PortraitAviationBackdrop
+              shouldReduceMotion={Boolean(shouldReduceMotion)}
+            />
+
             {imgError ? (
               <div
                 aria-label="Omar Ibrahim"
-                className="w-full h-full text-accent flex items-center justify-center text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight select-none"
+                className="relative z-10 w-full h-full text-accent flex items-center justify-center text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight select-none"
               >
                 OI
               </div>
             ) : (
-              <img
-                src="/me.png"
-                alt="Omar Ibrahim"
-                className="w-full h-full object-contain block select-none"
+              <div
+                className="relative z-10 w-full h-full"
                 style={{
-                  width: "100%",
-                  height: "100%",
-                  objectFit: "contain",
-                  display: "block",
+                  WebkitMaskImage:
+                    "linear-gradient(to bottom, #000 0%, #000 75%, rgba(0,0,0,0.45) 88%, transparent 100%)",
+                  maskImage:
+                    "linear-gradient(to bottom, #000 0%, #000 75%, rgba(0,0,0,0.45) 88%, transparent 100%)",
                 }}
-                onError={() => setImgError(true)}
-              />
+              >
+                <img
+                  src="/me.png"
+                  alt="Omar Ibrahim"
+                  className="w-full h-full object-contain block select-none"
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "contain",
+                    display: "block",
+                  }}
+                  onError={() => setImgError(true)}
+                />
+              </div>
             )}
           </div>
         </div>
