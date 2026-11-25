@@ -9,16 +9,20 @@ const CV_URL = "";
 // Set to true to also loop the USP paragraph (type -> hold 6s -> delete -> type)
 const LOOP_USP = false;
 
-const TYPE_SPEED_MS = 36;
-const DELETE_SPEED_MS = 20;
-const ROLE_HOLD_MS = 2200;
+const TYPE_SPEED_MS = 95;
+const DELETE_SPEED_MS = 55;
+const ROLE_HOLD_MS = 1800;
 const USP_HOLD_MS = 6000;
 
 const PLANE_PATH =
   "M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z";
 
 /* Skywriting / Typing Airplane Indicator matching exact font-size via 1em */
-function AirplaneCursor({ isRtl }) {
+function AirplaneCursor({ isRtl, isDeleting = false }) {
+  // In LTR: typing -> nose right (scale-x-100), deleting -> nose left (scale-x-[-1])
+  // In RTL: typing -> nose left (scale-x-[-1]), deleting -> nose right (scale-x-100)
+  const flipHorizontal = isRtl ? !isDeleting : isDeleting;
+
   return (
     <span
       aria-hidden="true"
@@ -26,8 +30,8 @@ function AirplaneCursor({ isRtl }) {
     >
       <svg
         viewBox="0 0 24 24"
-        className={`w-[1em] h-[1em] inline-block align-middle text-accent dark:text-blue-400 drop-shadow-[0_0_6px_rgba(37,99,235,0.45)] rotate-90 ${
-          isRtl ? "scale-x-[-1]" : ""
+        className={`w-[1em] h-[1em] inline-block align-middle text-accent dark:text-blue-400 drop-shadow-[0_0_6px_rgba(37,99,235,0.45)] rotate-90 transition-transform duration-200 ease-in-out ${
+          flipHorizontal ? "scale-x-[-1]" : "scale-x-100"
         }`}
         style={{ width: "1em", height: "1em" }}
         fill="currentColor"
@@ -340,9 +344,15 @@ export default function Home() {
   const cursorLine = (() => {
     if (stage === "greeting") return "greeting";
     if (stage === "name") return "name";
-    if (stage === "roleIntro" || rolePhase === "typing" || rolePhase === "deleting")
+    if (stage === "usp") return "usp";
+    if (
+      stage === "roleIntro" ||
+      rolePhase === "typing" ||
+      rolePhase === "deleting" ||
+      (stage === "done" && rolePhase === "hold")
+    )
       return "role";
-    if (stage === "usp" || uspPhase === "typing" || uspPhase === "deleting")
+    if (uspPhase === "typing" || uspPhase === "deleting")
       return "usp";
     return null;
   })();
@@ -394,7 +404,9 @@ export default function Home() {
             </span>
             <span aria-hidden="true" className="col-start-1 row-start-1">
               {displayedGreeting}
-              {cursorLine === "greeting" && <AirplaneCursor isRtl={isRtl} />}
+              {cursorLine === "greeting" && (
+                <AirplaneCursor isRtl={isRtl} isDeleting={false} />
+              )}
             </span>
           </p>
 
@@ -413,7 +425,9 @@ export default function Home() {
             </span>
             <span aria-hidden="true" className="col-start-1 row-start-1">
               {displayedName}
-              {cursorLine === "name" && <AirplaneCursor isRtl={isRtl} />}
+              {cursorLine === "name" && (
+                <AirplaneCursor isRtl={isRtl} isDeleting={false} />
+              )}
             </span>
           </h1>
 
@@ -435,7 +449,12 @@ export default function Home() {
             ))}
             <span aria-hidden="true" className="col-start-1 row-start-1">
               {displayedRole}
-              {cursorLine === "role" && <AirplaneCursor isRtl={isRtl} />}
+              {cursorLine === "role" && (
+                <AirplaneCursor
+                  isRtl={isRtl}
+                  isDeleting={rolePhase === "deleting"}
+                />
+              )}
             </span>
           </h2>
 
@@ -454,7 +473,12 @@ export default function Home() {
             </span>
             <span aria-hidden="true" className="col-start-1 row-start-1">
               {displayedUsp}
-              {cursorLine === "usp" && <AirplaneCursor isRtl={isRtl} />}
+              {cursorLine === "usp" && (
+                <AirplaneCursor
+                  isRtl={isRtl}
+                  isDeleting={uspPhase === "deleting"}
+                />
+              )}
             </span>
           </p>
 
