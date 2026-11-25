@@ -9,6 +9,7 @@ import Navbar from "./components/Navbar";
 import Home from "./components/sections/Home";
 import About from "./components/sections/About";
 import Education from "./components/sections/Education";
+import Certificates from "./components/sections/Certificates";
 import Skills from "./components/sections/Skills";
 import Experience from "./components/sections/Experience";
 import Services from "./components/sections/Services";
@@ -57,6 +58,7 @@ export default function App() {
         <Home />
         <About />
         <Education />
+        <Certificates />
         <Skills />
         <Experience />
         <Services />

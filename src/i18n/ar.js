@@ -571,6 +571,7 @@ const ar = {
     home: "الرئيسية",
     about: "عني",
     education: "التعليم",
+    certificates: "الشهادات",
     skills: "المهارات",
     experience: "الخبرة",
     services: "الخدمات",

@@ -7,6 +7,7 @@ export const ALL_NAV_KEYS = [
   "home",
   "about",
   "education",
+  "certificates",
   "skills",
   "experience",
   "services",
@@ -17,6 +18,7 @@ export const ALL_NAV_KEYS = [
 
 export function getVisibleNavKeys(t) {
   return ALL_NAV_KEYS.filter((key) => {
+    if (key === "certificates" && (!t.education?.certificates || t.education.certificates.length === 0)) return false;
     if (key === "achievements" && (!t.achievements?.items || t.achievements.items.length < 2)) return false;
     if (key === "experience" && (!t.experience?.items || t.experience.items.length === 0)) return false;
     if (key === "services" && (!t.services?.items || t.services.items.length === 0)) return false;

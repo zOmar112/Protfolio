@@ -573,6 +573,7 @@ const en = {
     home: "Home",
     about: "About Me",
     education: "Education",
+    certificates: "Certificates",
     skills: "Skills",
     experience: "Experience",
     services: "Services",
