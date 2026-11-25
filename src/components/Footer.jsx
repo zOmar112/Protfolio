@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useLanguage } from "../context/LanguageContext";
 
 function GitHubIcon() {
@@ -67,22 +66,6 @@ function ExternalLinkIcon() {
   );
 }
 
-function CopyIcon() {
-  return (
-    <svg className="w-3.5 h-3.5 text-gray-400 group-hover:text-accent dark:group-hover:text-blue-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-    </svg>
-  );
-}
-
-function CheckIcon() {
-  return (
-    <svg className="w-3.5 h-3.5 text-emerald-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-    </svg>
-  );
-}
-
 function getPlatformLogo(name = "", url = "") {
   const target = `${name} ${url}`.toLowerCase();
   if (target.includes("mostaql")) return "/platforms/mostaql.jpg";
@@ -97,14 +80,6 @@ export default function Footer() {
   const { t, lang } = useLanguage();
   const isRtl = lang === "ar";
   const footer = t.footer;
-  const [copiedKey, setCopiedKey] = useState(null);
-
-  const handleCopy = (text, key) => {
-    if (!text) return;
-    navigator.clipboard.writeText(text);
-    setCopiedKey(key);
-    setTimeout(() => setCopiedKey(null), 2000);
-  };
 
   return (
     <footer className="border-t border-gray-200 dark:border-gray-800 bg-white/50 dark:bg-gray-950/50 transition-colors">
@@ -148,67 +123,43 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Column 2: Direct Contact */}
+          {/* Column 2: Direct Contact (Icon buttons matching LinkedIn & GitHub) */}
           <div className="flex flex-col items-start text-start">
             <h4 className="text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500 mb-4">
               {isRtl ? "التواصل المباشر" : "DIRECT CONTACT"}
             </h4>
-            <div className="flex flex-col gap-3 w-full max-w-sm">
-              {/* Email Pill with Official Gmail Logo */}
-              <div className="inline-flex items-center justify-between gap-3 px-3.5 py-2.5 rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50/70 dark:bg-gray-900/60 shadow-2xs hover:border-gray-300 dark:hover:border-gray-700 transition-colors">
-                <a
-                  href={`mailto:${footer.email}`}
-                  className="inline-flex items-center gap-2.5 text-xs sm:text-sm font-medium text-gray-800 dark:text-gray-200 hover:text-accent dark:hover:text-blue-400 transition-colors cursor-pointer truncate"
-                  title={footer.email}
-                >
-                  <GmailIcon />
-                  <span className="truncate">{footer.email}</span>
-                </a>
-                <button
-                  type="button"
-                  onClick={() => handleCopy(footer.email, "email")}
-                  className="p-1 rounded-md hover:bg-gray-200/60 dark:hover:bg-gray-800 transition-colors cursor-pointer group shrink-0"
-                  title={copiedKey === "email" ? footer.copied : footer.copy}
-                  aria-label="Copy Email"
-                >
-                  {copiedKey === "email" ? <CheckIcon /> : <CopyIcon />}
-                </button>
-              </div>
+            <div className="flex items-center gap-3">
+              {/* Gmail Button */}
+              <a
+                href={`mailto:${footer.email}`}
+                className="p-2.5 rounded-xl border border-gray-200 dark:border-gray-800 text-gray-700 dark:text-gray-300 hover:border-accent dark:hover:border-accent transition-colors cursor-pointer"
+                title={`Gmail: ${footer.email}`}
+                aria-label="Gmail"
+              >
+                <GmailIcon className="w-5 h-5 shrink-0" />
+              </a>
 
-              {/* WhatsApp & Direct Call Pill */}
-              <div className="inline-flex items-center justify-between gap-3 px-3.5 py-2.5 rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50/70 dark:bg-gray-900/60 shadow-2xs hover:border-gray-300 dark:hover:border-gray-700 transition-colors">
-                <a
-                  href={`https://wa.me/${footer.whatsapp?.replace("+", "")}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2.5 text-xs sm:text-sm font-medium text-gray-800 dark:text-gray-200 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors cursor-pointer truncate"
-                  title={isRtl ? "مراسلة عبر واتساب" : "Chat on WhatsApp"}
-                >
-                  <WhatsAppIcon />
-                  <span dir="ltr">{footer.whatsappDisplay}</span>
-                </a>
-                <div className="inline-flex items-center gap-1 shrink-0">
-                  {/* Direct Call Button - زرار يرن علي طول */}
-                  <a
-                    href={`tel:${footer.whatsapp || "+201028570417"}`}
-                    className="p-1.5 rounded-lg text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-300 hover:bg-emerald-100/60 dark:hover:bg-emerald-950/60 transition-colors cursor-pointer"
-                    title={isRtl ? "اتصال فوري" : "Call Directly"}
-                    aria-label={isRtl ? "اتصال فوري" : "Call Directly"}
-                  >
-                    <PhoneCallIcon />
-                  </a>
-                  {/* Copy Phone Button */}
-                  <button
-                    type="button"
-                    onClick={() => handleCopy(footer.whatsappDisplay, "whatsapp")}
-                    className="p-1.5 rounded-lg hover:bg-gray-200/60 dark:hover:bg-gray-800 text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors cursor-pointer group shrink-0"
-                    title={copiedKey === "whatsapp" ? footer.copied : footer.copy}
-                    aria-label="Copy WhatsApp"
-                  >
-                    {copiedKey === "whatsapp" ? <CheckIcon /> : <CopyIcon />}
-                  </button>
-                </div>
-              </div>
+              {/* WhatsApp Button */}
+              <a
+                href={`https://wa.me/${footer.whatsapp?.replace("+", "")}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-2.5 rounded-xl border border-gray-200 dark:border-gray-800 text-gray-700 dark:text-gray-300 hover:border-[#25D366] dark:hover:border-[#25D366] transition-colors cursor-pointer"
+                title={`WhatsApp: ${footer.whatsappDisplay}`}
+                aria-label="WhatsApp"
+              >
+                <WhatsAppIcon className="w-5 h-5 shrink-0 text-[#25D366]" />
+              </a>
+
+              {/* Direct Call Button (يرن علي طول) */}
+              <a
+                href={`tel:${footer.whatsapp || "+201028570417"}`}
+                className="p-2.5 rounded-xl border border-gray-200 dark:border-gray-800 text-gray-700 dark:text-gray-300 hover:text-emerald-500 hover:border-emerald-500 dark:hover:border-emerald-400 transition-colors cursor-pointer"
+                title={isRtl ? `اتصال فوري: ${footer.whatsappDisplay}` : `Call Directly: ${footer.whatsappDisplay}`}
+                aria-label="Call Directly"
+              >
+                <PhoneCallIcon className="w-5 h-5 shrink-0 text-emerald-600 dark:text-emerald-400" />
+              </a>
             </div>
           </div>
 
