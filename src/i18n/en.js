@@ -523,6 +523,10 @@ const en = {
     successMessage: "✓ Thank you! Opening your email client to send your feedback.",
   },
   footer: {
+    connectHeading: "LET'S CONNECT",
+    connectText:
+      "Always open to discussing data analysis, machine learning projects, and academic collaborations.",
+    whoHeading: "WHO I AM?",
     intro:
       "Omar Ibrahim — Aviation Computers & Information student in Zagazig. Turning raw data into clear predictions through machine learning models built and tested on real datasets.",
     email: "imm5201978@gmail.com",
@@ -536,6 +540,7 @@ const en = {
       { name: "Nafezly", url: "https://nafezly.com/u/omarsoliman66" },
       { name: "Kafiil", url: "https://kafiil.com/" },
     ],
+    allRightsReserved: "All Rights Reserved.",
     copy: "Copy",
     copied: "Copied!",
   },
