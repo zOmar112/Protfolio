@@ -24,8 +24,12 @@ function AirplaneCursor({ isRtl, isDeleting = false }) {
   const flipHorizontal = isRtl ? !isDeleting : isDeleting;
 
   return (
-    <span
+    <motion.span
       aria-hidden="true"
+      initial={{ opacity: 0, scale: 0.6 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.6 }}
+      transition={{ duration: 0.2, ease: "easeOut" }}
       className="inline-block align-middle ms-1 select-none pointer-events-none"
     >
       <svg
@@ -38,7 +42,7 @@ function AirplaneCursor({ isRtl, isDeleting = false }) {
       >
         <path d={PLANE_PATH} />
       </svg>
-    </span>
+    </motion.span>
   );
 }
 
@@ -342,18 +346,24 @@ export default function Home() {
 
   // Active cursor placement
   const cursorLine = (() => {
-    if (stage === "greeting") return "greeting";
-    if (stage === "name") return "name";
-    if (stage === "usp") return "usp";
-    if (
-      stage === "roleIntro" ||
-      rolePhase === "typing" ||
-      rolePhase === "deleting" ||
-      (stage === "done" && rolePhase === "hold")
-    )
+    if (stage === "greeting") {
+      return greetingLen < greetingText.length ? "greeting" : null;
+    }
+    if (stage === "name") {
+      return nameLen < nameText.length ? "name" : null;
+    }
+    if (stage === "usp") {
+      return uspLen < uspText.length ? "usp" : null;
+    }
+    if (rolePhase === "typing" && roleLen < currentRolePhrase.length) {
       return "role";
-    if (uspPhase === "typing" || uspPhase === "deleting")
+    }
+    if (rolePhase === "deleting") {
+      return "role";
+    }
+    if (LOOP_USP && (uspPhase === "typing" || uspPhase === "deleting")) {
       return "usp";
+    }
     return null;
   })();
 
@@ -404,9 +414,11 @@ export default function Home() {
             </span>
             <span aria-hidden="true" className="col-start-1 row-start-1">
               {displayedGreeting}
-              {cursorLine === "greeting" && (
-                <AirplaneCursor isRtl={isRtl} isDeleting={false} />
-              )}
+              <AnimatePresence>
+                {cursorLine === "greeting" && (
+                  <AirplaneCursor isRtl={isRtl} isDeleting={false} />
+                )}
+              </AnimatePresence>
             </span>
           </p>
 
@@ -425,9 +437,11 @@ export default function Home() {
             </span>
             <span aria-hidden="true" className="col-start-1 row-start-1">
               {displayedName}
-              {cursorLine === "name" && (
-                <AirplaneCursor isRtl={isRtl} isDeleting={false} />
-              )}
+              <AnimatePresence>
+                {cursorLine === "name" && (
+                  <AirplaneCursor isRtl={isRtl} isDeleting={false} />
+                )}
+              </AnimatePresence>
             </span>
           </h1>
 
@@ -449,12 +463,14 @@ export default function Home() {
             ))}
             <span aria-hidden="true" className="col-start-1 row-start-1">
               {displayedRole}
-              {cursorLine === "role" && (
-                <AirplaneCursor
-                  isRtl={isRtl}
-                  isDeleting={rolePhase === "deleting"}
-                />
-              )}
+              <AnimatePresence>
+                {cursorLine === "role" && (
+                  <AirplaneCursor
+                    isRtl={isRtl}
+                    isDeleting={rolePhase === "deleting"}
+                  />
+                )}
+              </AnimatePresence>
             </span>
           </h2>
 
@@ -473,12 +489,14 @@ export default function Home() {
             </span>
             <span aria-hidden="true" className="col-start-1 row-start-1">
               {displayedUsp}
-              {cursorLine === "usp" && (
-                <AirplaneCursor
-                  isRtl={isRtl}
-                  isDeleting={uspPhase === "deleting"}
-                />
-              )}
+              <AnimatePresence>
+                {cursorLine === "usp" && (
+                  <AirplaneCursor
+                    isRtl={isRtl}
+                    isDeleting={uspPhase === "deleting"}
+                  />
+                )}
+              </AnimatePresence>
             </span>
           </p>
 
