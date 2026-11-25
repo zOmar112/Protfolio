@@ -18,7 +18,7 @@ const en = {
     name: "Omar Ibrahim",
     role: "Data & Machine Learning Student",
     roleAlt: "Aviation Computers & Information Student",
-    usp: "I help teams and organizations turn raw data into clear predictions through machine learning models I build and test on real datasets.",
+    usp: "I help teams turn raw data into clear predictions with machine learning.",
     viewWork: "View My Work",
     downloadCv: "Download CV",
     cvDialogMessage: "My CV isn't available yet. It will be added soon.",
@@ -27,7 +27,7 @@ const en = {
   },
   about: {
     hook: "Turning raw data into clear predictions",
-    p1: "I'm Omar Ibrahim, a third-year Aviation Computers and Information student in Zagazig. I help teams and organizations turn raw data into clear predictions through machine learning models I build and test on real datasets. In my machine learning course I built an end-to-end pipeline that predicts whether income exceeds $50K (project score 98), and an exploratory analysis with data cleaning and feature engineering on the Home Credit Default Risk dataset.",
+    p1: "I'm Omar Ibrahim, a third-year Aviation Computers and Information student in Zagazig. I help teams turn raw data into clear predictions with machine learning. In my machine learning course I built an end-to-end pipeline that predicts whether income exceeds $50K (project score 98), and an exploratory analysis with data cleaning and feature engineering on the Home Credit Default Risk dataset.",
     p2: "I also contributed to Vortex-Gen, a virtual aviation wind tunnel that our team extended with educational content on several aviation topics, and we placed third in a hackathon. I'm passionate about football and would welcome a chance to apply data analysis to performance, match, or player analysis.",
   },
   education: {
