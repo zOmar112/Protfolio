@@ -19,9 +19,11 @@ const PLANE_PATH =
 
 /* Skywriting / Typing Airplane Indicator matching exact font-size via 1em */
 function AirplaneCursor({ isRtl, isDeleting = false }) {
-  // In LTR: typing -> nose right (scale-x-100), deleting -> nose left (scale-x-[-1])
-  // In RTL: typing -> nose left (scale-x-[-1]), deleting -> nose right (scale-x-100)
-  const flipHorizontal = isRtl ? !isDeleting : isDeleting;
+  // In LTR: typing -> nose right (90deg), deleting -> nose left (-90deg)
+  // In RTL: typing -> nose left (-90deg), deleting -> nose right (90deg)
+  const rotationDeg = isRtl
+    ? (isDeleting ? 90 : -90)
+    : (isDeleting ? -90 : 90);
 
   return (
     <motion.span
@@ -34,10 +36,12 @@ function AirplaneCursor({ isRtl, isDeleting = false }) {
     >
       <svg
         viewBox="0 0 24 24"
-        className={`w-[1em] h-[1em] inline-block align-middle text-accent dark:text-blue-400 drop-shadow-[0_0_6px_rgba(37,99,235,0.45)] rotate-90 transition-transform duration-200 ease-in-out ${
-          flipHorizontal ? "scale-x-[-1]" : "scale-x-100"
-        }`}
-        style={{ width: "1em", height: "1em" }}
+        className="w-[1em] h-[1em] inline-block align-middle text-accent dark:text-blue-400 drop-shadow-[0_0_6px_rgba(37,99,235,0.45)] transition-transform duration-200 ease-in-out"
+        style={{
+          width: "1em",
+          height: "1em",
+          transform: `rotate(${rotationDeg}deg)`,
+        }}
         fill="currentColor"
       >
         <path d={PLANE_PATH} />
