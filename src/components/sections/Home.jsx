@@ -9,10 +9,10 @@ const CV_URL = "";
 // Set to true to also loop the USP paragraph (type -> hold 6s -> delete -> type)
 const LOOP_USP = false;
 
-const TYPE_SPEED_MS = 95;
-const DELETE_SPEED_MS = 55;
-const ROLE_HOLD_MS = 1800;
-const USP_HOLD_MS = 6000;
+const TYPE_SPEED_MS = 65;
+const DELETE_SPEED_MS = 38;
+const ROLE_HOLD_MS = 1400;
+const USP_HOLD_MS = 5000;
 
 const PLANE_PATH =
   "M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z";
