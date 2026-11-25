@@ -201,8 +201,6 @@ function NeuralCategoryBoard({ category, skillsData, lang, shouldReduceMotion })
   const leftRefs = useRef({});
   const rightRefs = useRef({});
   const [coords, setCoords] = useState(null);
-  const beamAngleRef = useRef(0);
-  const [beamAngle, setBeamAngle] = useState(0);
 
   const activeFocus = hoveredNode || lockedNode || {
     side: "core",
@@ -339,18 +337,48 @@ function NeuralCategoryBoard({ category, skillsData, lang, shouldReduceMotion })
 
   const isBeamActive = Boolean(!isCoreFocus && focusedTargetPoint);
 
-  useEffect(() => {
-    if (!coords || !focusedTargetPoint) return;
-    const dx = focusedTargetPoint.x - coords.radar.x;
-    const dy = focusedTargetPoint.y - coords.radar.y;
-    const targetDeg = (Math.atan2(dy, dx) * 180) / Math.PI;
+  const beamGeo = (() => {
+    if (!coords) return null;
+    const cx = coords.cab.x;
+    const cy = coords.cab.y;
+    const tx = focusedTargetPoint ? focusedTargetPoint.x : cx + 100;
+    const ty = focusedTargetPoint ? focusedTargetPoint.y : cy;
+    const dx = tx - cx;
+    const dy = ty - cy;
+    const dist = Math.max(1, Math.hypot(dx, dy));
+    const ux = dx / dist;
+    const uy = dy / dist;
+    const px = -uy;
+    const py = ux;
 
-    const current = beamAngleRef.current;
-    const delta = ((((targetDeg - current) % 360) + 540) % 360) - 180;
-    const next = current + delta;
-    beamAngleRef.current = next;
-    setBeamAngle(next);
-  }, [coords, focusedTargetPoint]);
+    const farDist = dist + 48;
+    const farCenterX = cx + ux * farDist;
+    const farCenterY = cy + uy * farDist;
+    const hw = Math.max(38, Math.min(54, dist * 0.12 + 18));
+    const coreHw = hw * 0.45;
+
+    const v1x = farCenterX + px * hw;
+    const v1y = farCenterY + py * hw;
+    const v2x = farCenterX - px * hw;
+    const v2y = farCenterY - py * hw;
+
+    const c1x = farCenterX + px * coreHw;
+    const c1y = farCenterY + py * coreHw;
+    const c2x = farCenterX - px * coreHw;
+    const c2y = farCenterY - py * coreHw;
+
+    const outerPath = `M ${cx} ${cy} L ${v1x.toFixed(1)} ${v1y.toFixed(1)} Q ${(farCenterX + ux * 8).toFixed(1)} ${(farCenterY + uy * 8).toFixed(1)} ${v2x.toFixed(1)} ${v2y.toFixed(1)} Z`;
+    const corePath = `M ${cx} ${cy} L ${c1x.toFixed(1)} ${c1y.toFixed(1)} Q ${(farCenterX + ux * 6).toFixed(1)} ${(farCenterY + uy * 6).toFixed(1)} ${c2x.toFixed(1)} ${c2y.toFixed(1)} Z`;
+
+    return {
+      cx,
+      cy,
+      farCenterX,
+      farCenterY,
+      outerPath,
+      corePath,
+    };
+  })();
 
   useLayoutEffect(() => {
     measureGraph();
@@ -472,28 +500,36 @@ function NeuralCategoryBoard({ category, skillsData, lang, shouldReduceMotion })
                   <stop offset="50%" stopColor="#22d3ee" stopOpacity="1" />
                   <stop offset="100%" stopColor="#38bdf8" stopOpacity="0.85" />
                 </linearGradient>
-                <linearGradient
-                  id={`radarBeamOuter-${category.id}`}
-                  x1="0%"
-                  y1="50%"
-                  x2="100%"
-                  y2="50%"
-                >
-                  <stop offset="0%" stopColor="#22d3ee" stopOpacity="0.34" />
-                  <stop offset="45%" stopColor="#06b6d4" stopOpacity="0.14" />
-                  <stop offset="100%" stopColor="#06b6d4" stopOpacity="0" />
-                </linearGradient>
-                <linearGradient
-                  id={`radarBeamCore-${category.id}`}
-                  x1="0%"
-                  y1="50%"
-                  x2="100%"
-                  y2="50%"
-                >
-                  <stop offset="0%" stopColor="#67e8f9" stopOpacity="0.45" />
-                  <stop offset="55%" stopColor="#22d3ee" stopOpacity="0.12" />
-                  <stop offset="100%" stopColor="#22d3ee" stopOpacity="0" />
-                </linearGradient>
+                {beamGeo && (
+                  <>
+                    <linearGradient
+                      id={`radarBeamOuter-${category.id}`}
+                      gradientUnits="userSpaceOnUse"
+                      x1={beamGeo.cx}
+                      y1={beamGeo.cy}
+                      x2={beamGeo.farCenterX}
+                      y2={beamGeo.farCenterY}
+                    >
+                      <stop offset="0%" stopColor="#22d3ee" stopOpacity="0.48" />
+                      <stop offset="35%" stopColor="#06b6d4" stopOpacity="0.22" />
+                      <stop offset="75%" stopColor="#06b6d4" stopOpacity="0.10" />
+                      <stop offset="100%" stopColor="#06b6d4" stopOpacity="0" />
+                    </linearGradient>
+                    <linearGradient
+                      id={`radarBeamCore-${category.id}`}
+                      gradientUnits="userSpaceOnUse"
+                      x1={beamGeo.cx}
+                      y1={beamGeo.cy}
+                      x2={beamGeo.farCenterX}
+                      y2={beamGeo.farCenterY}
+                    >
+                      <stop offset="0%" stopColor="#a5f3fc" stopOpacity="0.68" />
+                      <stop offset="25%" stopColor="#67e8f9" stopOpacity="0.36" />
+                      <stop offset="70%" stopColor="#22d3ee" stopOpacity="0.14" />
+                      <stop offset="100%" stopColor="#22d3ee" stopOpacity="0" />
+                    </linearGradient>
+                  </>
+                )}
                 <filter
                   id={`cyanLineGlow-${category.id}`}
                   x="-20%"
@@ -509,45 +545,33 @@ function NeuralCategoryBoard({ category, skillsData, lang, shouldReduceMotion })
                 </filter>
               </defs>
 
-              {/* 0. Interactive Rotating Cyan Radar Spotlight Beam from Top of ATC Tower */}
-              {(() => {
-                const beamLen = Math.max(coords.width * 0.56, 260);
-                const halfSpread = beamLen * 0.27;
-                const coreSpread = beamLen * 0.11;
-                return (
-                  <g transform={`translate(${coords.radar.x}, ${coords.radar.y})`}>
-                    <motion.g
-                      style={{ transformOrigin: "0px 0px" }}
-                      initial={false}
-                      animate={{
-                        rotate: beamAngle,
-                        opacity: isBeamActive ? 1 : 0,
-                      }}
-                      transition={
-                        shouldReduceMotion
-                          ? { duration: 0 }
-                          : {
-                              rotate: {
-                                type: "spring",
-                                stiffness: 170,
-                                damping: 24,
-                              },
-                              opacity: { duration: 0.24 },
-                            }
-                      }
-                    >
-                      <path
-                        d={`M 0 0 L ${beamLen} ${-halfSpread} A ${beamLen} ${beamLen} 0 0 1 ${beamLen} ${halfSpread} Z`}
-                        fill={`url(#radarBeamOuter-${category.id})`}
-                      />
-                      <path
-                        d={`M 0 0 L ${beamLen} ${-coreSpread} A ${beamLen} ${beamLen} 0 0 1 ${beamLen} ${coreSpread} Z`}
-                        fill={`url(#radarBeamCore-${category.id})`}
-                      />
-                    </motion.g>
-                  </g>
-                );
-              })()}
+              {/* 0. Interactive Radar Spotlight Cone from Tower Cab directly to Hovered Node */}
+              {beamGeo && (
+                <motion.g
+                  initial={false}
+                  animate={{ opacity: isBeamActive ? 1 : 0 }}
+                  transition={{ duration: shouldReduceMotion ? 0 : 0.2 }}
+                >
+                  <motion.path
+                    animate={{ d: beamGeo.outerPath }}
+                    transition={
+                      shouldReduceMotion
+                        ? { duration: 0 }
+                        : { duration: 0.18, ease: "easeOut" }
+                    }
+                    fill={`url(#radarBeamOuter-${category.id})`}
+                  />
+                  <motion.path
+                    animate={{ d: beamGeo.corePath }}
+                    transition={
+                      shouldReduceMotion
+                        ? { duration: 0 }
+                        : { duration: 0.18, ease: "easeOut" }
+                    }
+                    fill={`url(#radarBeamCore-${category.id})`}
+                  />
+                </motion.g>
+              )}
 
               {/* 1. Faint Background Cross-Mesh Curves (Left <-> Linked Right) */}
               {category.leftNodes.map((lNode) => {
