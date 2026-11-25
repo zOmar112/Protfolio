@@ -344,7 +344,7 @@ const en = {
     items: [
       {
         id: "ber-store",
-        role: "Founder & Builder",
+        role: "Builder",
         company: "Ber Store",
         logo: "/ber-logo.png",
         type: "Personal Project",

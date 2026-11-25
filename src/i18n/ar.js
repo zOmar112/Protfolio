@@ -344,7 +344,7 @@ const ar = {
     items: [
       {
         id: "ber-store",
-        role: "المؤسس والمطوّر",
+        role: "المطوّر",
         company: "متجر بِرّ (Ber Store)",
         logo: "/ber-logo.png",
         type: "مشروع شخصي",
