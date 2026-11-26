@@ -534,7 +534,7 @@ const ar = {
     freelance: [
       { name: "مستقل (Mostaql)", url: "https://mostaql.com/u/Omar_soliman66" },
       { name: "Upwork", url: "https://www.upwork.com/freelancers/~013346c5c780f2680c" },
-      { name: "خمسات (Khamsat)", url: "https://khamsat.com/user/omarsoliman66" },
+      { name: "خمسات (Khamsat)", url: "https://khamsat.com/user/omarsoliman52" },
       { name: "نفّذلي (Nafezly)", url: "https://nafezly.com/u/omarsoliman66" },
       { name: "كفيل (Kafiil)", url: "https://kafiil.com/" },
     ],
