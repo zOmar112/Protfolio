@@ -537,7 +537,7 @@ const en = {
       { name: "Mostaql", url: "https://mostaql.com/u/Omar_soliman66" },
       { name: "Upwork", url: "https://www.upwork.com/freelancers/~013346c5c780f2680c" },
       { name: "Khamsat", url: "https://khamsat.com/user/omarsoliman52" },
-      { name: "Nafezly", url: "https://nafezly.com/u/omarsoliman66" },
+      { name: "Nafezly", url: "https://nafezly.com/u/zOmarsoliman" },
       { name: "Kafiil", url: "https://kafiil.com/" },
     ],
     allRightsReserved: "All Rights Reserved.",
